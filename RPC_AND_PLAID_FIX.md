@@ -39,7 +39,7 @@ secretsNames:
 ### 2. Updated `PrivaCRE/.env`
 ```bash
 # Added missing variables
-AI_API_KEY_LOCAL=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
+AI_API_KEY_LOCAL=your_groq_api_key_here
 PLAID_ACCESS_TOKEN=mock_access_token
 WORLD_ID_NULLIFIER=0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
 ```
@@ -132,7 +132,7 @@ PLAID_ENV=sandbox
 PLAID_ACCESS_TOKEN=mock_access_token  # For testing
 
 # AI Configuration
-GROQ_API_KEY=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
+GROQ_API_KEY=your_groq_api_key_here
 
 # RPC URLs (UPDATE IF EXPIRED)
 NEXT_PUBLIC_TENDERLY_RPC=https://virtual.sepolia.rpc.tenderly.co/4bbf41fd-7d67-46d3-93cc-883cf0440985
@@ -148,7 +148,7 @@ PLAID_ENV=sandbox
 PLAID_ACCESS_TOKEN=mock_access_token
 
 # AI
-AI_API_KEY_LOCAL=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
+AI_API_KEY_LOCAL=your_groq_api_key_here
 
 # World ID
 WORLD_ID_NULLIFIER=0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef

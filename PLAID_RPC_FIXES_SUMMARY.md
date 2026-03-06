@@ -30,7 +30,7 @@ PLAID_CLIENT_ID:
 ### File: `PrivaCRE/.env`
 ```bash
 # Added missing variables:
-AI_API_KEY_LOCAL=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
+AI_API_KEY_LOCAL=your_groq_api_key_here
 PLAID_ACCESS_TOKEN=mock_access_token
 WORLD_ID_NULLIFIER=0x1234567890abcdef...
 ```
