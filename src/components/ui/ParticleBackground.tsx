@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { useEffect, useRef } from "react"
-import { gsap } from "gsap"
 
 export default function ParticleBackground() {
     const canvasRef = useRef<HTMLCanvasElement>(null)

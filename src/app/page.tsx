@@ -4,56 +4,6 @@ export default function HomePage() {
     return (
         <div className="relative flex min-h-screen w-full flex-col">
             <div className="layout-container flex h-full grow flex-col">
-                {/* Header */}
-                <div className="w-full flex justify-center sticky top-0 z-50 bg-background-dark/80 backdrop-blur-md border-b border-border-dark">
-                    <div className="layout-content-container flex flex-col max-w-[1200px] flex-1">
-                        <header className="flex items-center justify-between whitespace-nowrap px-4 md:px-10 py-4">
-                            <div className="flex items-center gap-3 text-white">
-                                <div className="size-8 text-primary">
-                                    <span className="material-symbols-outlined !text-[32px]">security</span>
-                                </div>
-                                <h2 className="text-white text-xl font-bold leading-tight tracking-tight">
-                                    PrivaCRE
-                                </h2>
-                            </div>
-                            <div className="hidden md:flex items-center gap-8">
-                                <nav className="flex items-center gap-8">
-                                    <a
-                                        className="text-text-secondary hover:text-primary transition-colors text-sm font-medium"
-                                        href="#how-it-works"
-                                    >
-                                        How it Works
-                                    </a>
-                                    <a
-                                        className="text-text-secondary hover:text-primary transition-colors text-sm font-medium"
-                                        href="#security"
-                                    >
-                                        Security
-                                    </a>
-                                    <Link
-                                        className="text-text-secondary hover:text-primary transition-colors text-sm font-medium"
-                                        href="/orchestration"
-                                    >
-                                        Governance
-                                    </Link>
-                                    <a
-                                        className="text-text-secondary hover:text-primary transition-colors text-sm font-medium"
-                                        href="#faq"
-                                    >
-                                        FAQ
-                                    </a>
-                                </nav>
-                            </div>
-                            <Link
-                                href="/dashboard"
-                                className="flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-background-dark text-sm font-bold leading-normal tracking-wide hover:bg-white transition-colors"
-                            >
-                                <span className="truncate">Launch App</span>
-                            </Link>
-                        </header>
-                    </div>
-                </div>
-
                 {/* Main Content */}
                 <div className="w-full flex flex-1 justify-center">
                     <div className="layout-content-container flex flex-col max-w-[1200px] flex-1">

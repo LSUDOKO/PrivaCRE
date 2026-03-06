@@ -6,137 +6,183 @@
 const { ethers } = require("ethers");
 const fs = require("fs");
 const path = require("path");
+require('dotenv').config();
 
-// Mock secrets for simulation
-const mockSecrets = {
-  BANK_API_KEY: "mock_bank_api_key_12345",
-  AI_API_KEY: "mock_ai_api_key_67890",
-  PLAID_CLIENT_ID: "mock_plaid_client_id",
-  PLAID_SECRET: "mock_plaid_secret",
-};
+// Mock bank data helper for dynamic scores
+function getMockBankData() {
+  const randomMultiplier = 0.8 + Math.random() * 0.4; // 0.8 to 1.2
+  return {
+    accounts: [
+      {
+        account_id: "mock_account_1",
+        balances: {
+          current: 5420.50 * randomMultiplier,
+          available: 5420.50 * randomMultiplier,
+        },
+      },
+    ],
+    transactions: [
+      { amount: -3500.00 * randomMultiplier, date: "2024-01-15", category: ["Income", "Payroll"] },
+      { amount: 1200.00 * (1 + (Math.random() - 0.5) * 0.2), date: "2024-01-16", category: ["Transfer", "Rent"] },
+      { amount: 85.50 * (1 + (Math.random() - 0.5) * 0.5), date: "2024-01-17", category: ["Food and Drink", "Restaurants"] },
+      { amount: -3500.00 * randomMultiplier, date: "2024-02-15", category: ["Income", "Payroll"] },
+      { amount: 1200.00 * (1 + (Math.random() - 0.5) * 0.2), date: "2024-02-16", category: ["Transfer", "Rent"] },
+      { amount: 92.30 * (1 + (Math.random() - 0.5) * 0.5), date: "2024-02-18", category: ["Food and Drink", "Groceries"] },
+    ],
+  };
+}
 
-// Mock bank data response
-const mockBankData = {
-  accounts: [
-    {
-      account_id: "mock_account_1",
-      balances: {
-        current: 5420.50,
-        available: 5420.50,
+/**
+ * NEW: REAL BANK DATA FETCHING (PLAID)
+ * This will attempt to fetch real data if configured
+ */
+async function getRealBankData() {
+  const { Configuration, PlaidApi, PlaidEnvironments } = require('plaid');
+
+  if (!process.env.PLAID_CLIENT_ID || !process.env.PLAID_SECRET || !process.env.PLAID_ACCESS_TOKEN) {
+    console.log("⚠️ Plaid credentials missing in .env. Falling back to Mock Data.");
+    return null;
+  }
+
+  const configuration = new Configuration({
+    basePath: PlaidEnvironments[process.env.PLAID_ENV || 'sandbox'],
+    baseOptions: {
+      headers: {
+        'PLAID-CLIENT-ID': process.env.PLAID_CLIENT_ID,
+        'PLAID-SECRET': process.env.PLAID_SECRET,
       },
     },
-  ],
-  transactions: [
-    { amount: -3500.00, date: "2024-01-15", category: ["Income", "Payroll"] },
-    { amount: 1200.00, date: "2024-01-16", category: ["Transfer", "Rent"] },
-    { amount: 85.50, date: "2024-01-17", category: ["Food and Drink", "Restaurants"] },
-    { amount: -3500.00, date: "2024-02-15", category: ["Income", "Payroll"] },
-    { amount: 1200.00, date: "2024-02-16", category: ["Transfer", "Rent"] },
-    { amount: 92.30, date: "2024-02-18", category: ["Food and Drink", "Groceries"] },
-    // Add more transactions...
-  ],
-};
+  });
 
-// Mock AI response
-const mockAIResponse = {
-  credit_score: 85,
-  justification: "Consistent income with stable payment history and positive cash flow",
-  risk_factors: ["Low debt-to-income ratio", "Regular income deposits", "Minimal overdrafts"],
-};
+  const client = new PlaidApi(configuration);
 
-async function simulateWorkflow() {
+  try {
+    console.log("🔗 Fetching real data from Plaid...");
+    const response = await client.transactionsSync({
+      access_token: process.env.PLAID_ACCESS_TOKEN,
+    });
+
+    return {
+      accounts: response.data.accounts,
+      transactions: response.data.added.map(tx => ({
+        amount: tx.amount,
+        date: tx.date,
+        category: tx.category
+      }))
+    };
+  } catch (error) {
+    console.error("❌ Plaid Sync Failed:", error.response ? error.response.data : error.message);
+    return null;
+  }
+}
+
+async function simulateWorkflow(address) {
   console.log("🚀 Starting CRE Workflow Simulation\n");
 
-  // Step 1: Parse arguments
+  // Attempt real data, fallback to mock
+  let bankData = await getRealBankData();
+  const isReal = !!bankData;
+  if (!bankData) {
+    bankData = getMockBankData();
+  }
+
   const workflowArgs = {
-    userAddress: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+    userAddress: address || "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
     worldIdNullifier: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
-    accessToken: "mock_access_token",
+    accessToken: isReal ? "real_access_token_verified" : "mock_access_token",
   };
 
-  console.log("📋 Workflow Arguments:");
-  console.log(JSON.stringify(workflowArgs, null, 2));
-  console.log();
+  console.log("📋 Workflow Arguments:", JSON.stringify(workflowArgs, null, 2));
 
-  // Step 2: Simulate fetching bank data
-  console.log("🏦 Fetching private bank data...");
-  console.log("✅ Bank data retrieved (PII redacted)");
-  console.log(`   - Transactions: ${mockBankData.transactions.length}`);
-  console.log(`   - Average Balance: $${mockBankData.accounts[0].balances.current}`);
-  console.log();
-
-  // Step 3: Sanitize data
-  console.log("🧹 Sanitizing data...");
-  const totalIncome = mockBankData.transactions
+  // Sanitize data
+  const totalIncome = bankData.transactions
     .filter((tx) => tx.amount < 0)
     .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
-  const totalExpenses = mockBankData.transactions
+  const totalExpenses = bankData.transactions
     .filter((tx) => tx.amount > 0)
     .reduce((sum, tx) => sum + tx.amount, 0);
 
-  console.log("✅ Data sanitized");
-  console.log(`   - Total Income: $${totalIncome.toFixed(2)}`);
-  console.log(`   - Total Expenses: $${totalExpenses.toFixed(2)}`);
-  console.log(`   - Net Cash Flow: $${(totalIncome - totalExpenses).toFixed(2)}`);
-  console.log();
+  const currentBalance = bankData.accounts[0].balances.current;
 
-  // Step 4: AI Analysis
-  console.log("🤖 Analyzing with AI...");
-  console.log("✅ AI analysis complete");
-  console.log(`   - Credit Score: ${mockAIResponse.credit_score}/100`);
-  console.log(`   - Justification: ${mockAIResponse.justification}`);
-  console.log();
+  // AI Analysis with Groq
+  const groqApiKey = "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";
+  const systemPrompt = `You are a professional credit underwriter. Analyze the input and return ONLY a raw JSON object with: "credit_score" (number from 1-100), "justification" (string, 1 sentence summary), and "risk_factors" (array of strings, max 3). 
+  Be extremely precise and vary the score based on the exact balance and income provided. Small changes in data should result in small changes in score.`;
+  const userPrompt = `Data (Case ID ${Math.floor(Math.random() * 1000)}): Income $${totalIncome.toFixed(2)}, Expenses $${totalExpenses.toFixed(2)}, Balance $${currentBalance.toFixed(2)}`;
 
-  // Step 5: Encode result
-  console.log("📦 Encoding result for on-chain verification...");
+  console.log("🤖 Analyzing with Groq AI (llama-3.3-70b-versatile)...");
+
+  let aiResponse = null;
+  try {
+    const fetchFn = typeof fetch !== 'undefined' ? fetch : globalThis.fetch;
+    if (!fetchFn) throw new Error("fetch is not defined in this environment");
+
+    const response = await fetchFn("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${groqApiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "llama-3.3-70b-versatile",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt }
+        ],
+        response_format: { type: "json_object" }
+      })
+    });
+
+    const data = await response.json();
+    if (data.error) {
+      console.error("❌ Groq API Error:", JSON.stringify(data.error, null, 2));
+      throw new Error(`Groq API Error: ${data.error.message || "Unknown error"}`);
+    }
+
+    aiResponse = JSON.parse(data.choices[0].message.content);
+
+    // Add small jitter for dynamic feedback as requested
+    const jitter = Math.floor(Math.random() * 7) - 3; // -3 to +3
+    aiResponse.credit_score = Math.min(100, Math.max(1, aiResponse.credit_score + jitter));
+
+    console.log("✅ Groq AI analysis complete (with dynamic jitter)");
+  } catch (error) {
+    console.error("❌ AI Analysis failed:", error.message);
+    throw error;
+  }
+
+  console.log(`   - Credit Score: ${aiResponse.credit_score}/100`);
+  console.log(`   - Justification: ${aiResponse.justification}`);
+
   const timestamp = Math.floor(Date.now() / 1000);
+  const checksummedAddress = ethers.getAddress(workflowArgs.userAddress);
   const abiCoder = ethers.AbiCoder.defaultAbiCoder();
 
   const encoded = abiCoder.encode(
     ["address", "uint256", "uint256", "bytes32", "string"],
     [
-      workflowArgs.userAddress,
-      mockAIResponse.credit_score,
+      checksummedAddress,
+      aiResponse.credit_score,
       timestamp,
       ethers.id(workflowArgs.worldIdNullifier),
-      mockAIResponse.justification,
+      aiResponse.justification,
     ]
   );
 
-  console.log("✅ Data encoded");
-  console.log(`   - Encoded length: ${encoded.length} bytes`);
-  console.log(`   - Encoded data: ${encoded.substring(0, 66)}...`);
-  console.log();
-
-  // Step 6: Simulate on-chain submission
-  console.log("⛓️  Simulating on-chain submission...");
-  console.log("✅ Transaction would be submitted to CrestVault.receiveScore()");
-  console.log();
-
-  // Summary
-  console.log("📊 Simulation Summary:");
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  console.log(`User Address:     ${workflowArgs.userAddress}`);
-  console.log(`Credit Score:     ${mockAIResponse.credit_score}/100`);
-  console.log(`Timestamp:        ${new Date(timestamp * 1000).toISOString()}`);
-  console.log(`World ID:         ${workflowArgs.worldIdNullifier.substring(0, 20)}...`);
-  console.log(`Status:           ✅ Ready for deployment`);
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  console.log();
-
-  // Save simulation results
   const results = {
     workflowArgs,
     bankDataSummary: {
-      transactionCount: mockBankData.transactions.length,
+      transactionCount: bankData.transactions.length,
       totalIncome,
       totalExpenses,
       netCashFlow: totalIncome - totalExpenses,
-      averageBalance: mockBankData.accounts[0].balances.current,
+      averageBalance: currentBalance,
+      dataSource: isReal ? "Real Bank API (Plaid)" : "Mock Simulation",
     },
-    aiResult: mockAIResponse,
+    aiResult: aiResponse,
     encodedData: encoded,
     timestamp,
+    isRealData: isReal
   };
 
   fs.writeFileSync(
@@ -144,13 +190,9 @@ async function simulateWorkflow() {
     JSON.stringify(results, null, 2)
   );
 
-  console.log("💾 Results saved to simulation-results.json");
-  console.log("\n✨ Simulation complete!");
-
   return results;
 }
 
-// Run simulation
 if (require.main === module) {
   simulateWorkflow()
     .then(() => process.exit(0))

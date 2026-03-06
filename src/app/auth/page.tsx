@@ -4,12 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { Shield, Smartphone, ArrowRight, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { ethers } from "ethers";
+import { IDKitWidget, VerificationLevel, type ISuccessResult } from "@worldcoin/idkit";
+
+const WORLD_ID_APP_ID = (process.env.NEXT_PUBLIC_WORLD_ID_APP_ID as `app_${string}`) || "app_7141eab28d3662245856d528b69d89e4";
 
 export default function AuthPage() {
     const [step, setStep] = useState(1);
+    const [walletAddress, setWalletAddress] = useState<string>("");
     const cardRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -20,8 +25,41 @@ export default function AuthPage() {
                 { y: 0, opacity: 1, duration: 1, ease: "power4.out" }
             );
         });
+
+        // Check if already connected
+        const savedAddr = localStorage.getItem("privacre_wallet");
+        if (savedAddr) setWalletAddress(savedAddr);
+
         return () => ctx.revert();
     }, []);
+
+    const connectWallet = async () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (typeof (window as any).ethereum !== "undefined") {
+            try {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const provider = new ethers.BrowserProvider((window as any).ethereum);
+                const accounts = await provider.send("eth_requestAccounts", []);
+                const addr = accounts[0];
+                setWalletAddress(addr);
+                localStorage.setItem("privacre_wallet", addr);
+                nextStep();
+            } catch (error) {
+                console.error("Error connecting wallet:", error);
+            }
+        } else {
+            alert("No crypto wallet found. Please install MetaMask.");
+        }
+    };
+
+    const handleWorldIDVerification = async (proof: ISuccessResult) => {
+        console.log("World ID Proof:", proof);
+        localStorage.setItem("privacre_verified", "true");
+        if (proof.nullifier_hash) {
+            localStorage.setItem("world_id_nullifier", proof.nullifier_hash);
+        }
+        window.location.href = '/dashboard';
+    };
 
     const nextStep = () => {
         gsap.to(cardRef.current, {
@@ -73,16 +111,16 @@ export default function AuthPage() {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <Button variant="outline" className="w-full h-16 justify-between px-6 bg-white/[0.02] border-white/5 hover:bg-white/[0.05] group" onClick={nextStep}>
+                                    <Button variant="outline" className="w-full h-16 justify-between px-6 bg-white/[0.02] border-white/5 hover:bg-white/[0.05] group" onClick={connectWallet}>
                                         <div className="flex items-center gap-4">
                                             <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center">
                                                 <span className="text-orange-500 font-bold">M</span>
                                             </div>
-                                            <span className="font-semibold">MetaMask</span>
+                                            <span className="font-semibold">{walletAddress ? `${walletAddress.substring(0, 10)}...` : "MetaMask"}</span>
                                         </div>
                                         <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-white transition-colors" />
                                     </Button>
-                                    <Button variant="outline" className="w-full h-16 justify-between px-6 bg-white/[0.02] border-white/5 hover:bg-white/[0.05] group" onClick={nextStep}>
+                                    <Button variant="outline" className="w-full h-16 justify-between px-6 bg-white/[0.02] border-white/5 hover:bg-white/[0.05] group" onClick={connectWallet}>
                                         <div className="flex items-center gap-4">
                                             <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
                                                 <span className="text-blue-500 font-bold">WC</span>
@@ -109,11 +147,25 @@ export default function AuthPage() {
                                 </div>
 
                                 <div className="space-y-4">
-                                    <Button size="xl" className="w-full h-14" onClick={() => (window.location.href = '/dashboard')}>
-                                        <ShieldCheck className="w-4 h-4 mr-2" />
-                                        Verify with World ID
-                                    </Button>
-                                    <Button variant="ghost" className="w-full h-14">
+                                    <IDKitWidget
+                                        app_id={WORLD_ID_APP_ID}
+                                        action="verify-identity"
+                                        verification_level={VerificationLevel.Orb}
+                                        handleVerify={handleWorldIDVerification}
+                                        onSuccess={() => {
+                                            localStorage.setItem("privacre_verified", "true");
+                                        }}
+                                        // @ts-ignore
+                                        environment="staging"
+                                    >
+                                        {({ open }: { open: () => void }) => (
+                                            <Button size="xl" className="w-full h-14" onClick={open}>
+                                                <ShieldCheck className="w-4 h-4 mr-2" />
+                                                Verify with World ID
+                                            </Button>
+                                        )}
+                                    </IDKitWidget>
+                                    <Button variant="ghost" className="w-full h-14" onClick={() => window.location.href = '/dashboard'}>
                                         Skip for now
                                     </Button>
                                 </div>

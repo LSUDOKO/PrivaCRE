@@ -104,6 +104,8 @@ function sanitizeBankData(rawData: any): any {
   };
 }
 
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
 /**
  * Analyze financial data using AI to generate credit score
  * Uses prompt engineering to ensure consistent, reliable scoring
@@ -113,6 +115,9 @@ async function analyzeRiskWithAI(sanitizedData: any): Promise<{
   justification: string;
   risk_factors: string[];
 }> {
+  const genAI = new GoogleGenerativeAI(secrets.AI_API_KEY);
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
   const systemPrompt = `You are a professional credit underwriter with 20 years of experience. 
 Analyze the following transaction history and financial metrics.
 
@@ -141,46 +146,23 @@ ${JSON.stringify(sanitizedData.transactions.slice(0, 50), null, 2)}
 
 Analyze and provide credit score.`;
 
-  const request: HTTPRequest = {
-    url: "https://api.openai.com/v1/chat/completions",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${secrets.AI_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: "gpt-4o",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
-      ],
-      temperature: 0.3,
-      max_tokens: 500,
-    }),
-  };
+  const result = await model.generateContent([systemPrompt, userPrompt]);
+  const response = await result.response;
+  const text = response.text();
 
-  const response = await fetch(request.url, {
-    method: request.method,
-    headers: request.headers,
-    body: request.body,
-  });
+  // Clean the response text to ensure it's valid JSON
+  const jsonStart = text.indexOf('{');
+  const jsonEnd = text.lastIndexOf('}') + 1;
+  const jsonText = text.substring(jsonStart, jsonEnd);
 
-  if (!response.ok) {
-    throw new Error(`AI API Error: ${response.status}`);
-  }
-
-  const aiResponse = await response.json();
-  const content = aiResponse.choices[0].message.content;
-
-  // Parse AI response
-  const result = JSON.parse(content);
+  const parsedResult = JSON.parse(jsonText);
 
   // Validate score is within bounds
-  if (result.credit_score < 1 || result.credit_score > 100) {
+  if (parsedResult.credit_score < 1 || parsedResult.credit_score > 100) {
     throw new Error("Invalid credit score from AI");
   }
 
-  return result;
+  return parsedResult;
 }
 
 /**
