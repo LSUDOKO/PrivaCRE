@@ -105,7 +105,10 @@ async function simulateWorkflow(address) {
   const currentBalance = bankData.accounts[0].balances.current;
 
   // AI Analysis with Groq
-  const groqApiKey = "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";
+  const groqApiKey = process.env.GROQ_API_KEY || process.env.AI_API_KEY_LOCAL;
+  if (!groqApiKey) {
+    throw new Error("GROQ_API_KEY not found in environment variables");
+  }
   const systemPrompt = `You are a professional credit underwriter. Analyze the input and return ONLY a raw JSON object with: "credit_score" (number from 1-100), "justification" (string, 1 sentence summary), and "risk_factors" (array of strings, max 3). 
   Be extremely precise and vary the score based on the exact balance and income provided. Small changes in data should result in small changes in score.`;
   const userPrompt = `Data (Case ID ${Math.floor(Math.random() * 1000)}): Income $${totalIncome.toFixed(2)}, Expenses $${totalExpenses.toFixed(2)}, Balance $${currentBalance.toFixed(2)}`;
