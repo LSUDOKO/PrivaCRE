@@ -8,15 +8,17 @@ async function main() {
 
   const [deployer] = await hre.ethers.getSigners();
   console.log("Deploying with account:", deployer.address);
-  console.log("Account balance:", (await deployer.getBalance()).toString());
+  const balance = await hre.ethers.provider.getBalance(deployer.address);
+  console.log("Account balance:", hre.ethers.formatEther(balance), "ETH");
   console.log("");
 
   // Deploy MockUSDC first (if not already deployed)
   console.log("📦 Deploying MockUSDC...");
   const MockUSDC = await hre.ethers.getContractFactory("MockUSDC");
   const mockUSDC = await MockUSDC.deploy();
-  await mockUSDC.deployed();
-  console.log("✅ MockUSDC deployed to:", mockUSDC.address);
+  await mockUSDC.waitForDeployment();
+  const mockUSDCAddress = await mockUSDC.getAddress();
+  console.log("✅ MockUSDC deployed to:", mockUSDCAddress);
   console.log("");
 
   // Oracle address (will be the CRE workflow address)
@@ -32,18 +34,19 @@ async function main() {
   console.log("📦 Deploying PrivateVault...");
   const PrivateVault = await hre.ethers.getContractFactory("PrivateVault");
   const privateVault = await PrivateVault.deploy(
-    mockUSDC.address,
+    mockUSDCAddress,
     oracleAddress,
     confidentialComputeAddress
   );
-  await privateVault.deployed();
-  console.log("✅ PrivateVault deployed to:", privateVault.address);
+  await privateVault.waitForDeployment();
+  const privateVaultAddress = await privateVault.getAddress();
+  console.log("✅ PrivateVault deployed to:", privateVaultAddress);
   console.log("");
 
   // Mint some USDC to the vault for liquidity
   console.log("💰 Minting USDC to PrivateVault...");
-  const mintAmount = hre.ethers.utils.parseUnits("100000", 6); // 100k USDC
-  await mockUSDC.mint(privateVault.address, mintAmount);
+  const mintAmount = hre.ethers.parseUnits("100000", 6); // 100k USDC
+  await mockUSDC.mint(privateVaultAddress, mintAmount);
   console.log("✅ Minted 100,000 USDC to vault");
   console.log("");
 
@@ -58,8 +61,8 @@ async function main() {
   console.log("╚════════════════════════════════════════════════════════════╝");
   console.log("");
   console.log("📝 Contract Addresses:");
-  console.log("  MockUSDC:        ", mockUSDC.address);
-  console.log("  PrivateVault:    ", privateVault.address);
+  console.log("  MockUSDC:        ", mockUSDCAddress);
+  console.log("  PrivateVault:    ", privateVaultAddress);
   console.log("  Oracle:          ", oracleAddress);
   console.log("  Confidential CC: ", confidentialComputeAddress);
   console.log("");
@@ -73,10 +76,10 @@ async function main() {
   console.log("");
   console.log("📋 Next Steps:");
   console.log("  1. Update PrivaCRE/my-workflow/config.staging.json:");
-  console.log(`     "privateVaultAddress": "${privateVault.address}"`);
+  console.log(`     "privateVaultAddress": "${privateVaultAddress}"`);
   console.log("");
   console.log("  2. Grant CONFIDENTIAL_COMPUTE_ROLE to CRE DON:");
-  console.log(`     cast send ${privateVault.address} \\`);
+  console.log(`     cast send ${privateVaultAddress} \\`);
   console.log(`       "grantRole(bytes32,address)" \\`);
   console.log(`       $(cast keccak "CONFIDENTIAL_COMPUTE_ROLE()") \\`);
   console.log(`       <CRE_DON_ADDRESS> \\`);
@@ -98,8 +101,8 @@ async function main() {
     network: hre.network.name,
     timestamp: new Date().toISOString(),
     contracts: {
-      MockUSDC: mockUSDC.address,
-      PrivateVault: privateVault.address,
+      MockUSDC: mockUSDCAddress,
+      PrivateVault: privateVaultAddress,
     },
     config: {
       oracle: oracleAddress,

@@ -1,273 +1,197 @@
 import Link from "next/link";
+import MetaballBackground from '@/components/ui/MetaballBackground';
+import AnimatedButton from '@/components/ui/AnimatedButton';
+import AnimatedCard from '@/components/ui/AnimatedCard';
+import CounterAnimation from '@/components/ui/CounterAnimation';
+import PageTransition from '@/components/animations/PageTransition';
 
 export default function HomePage() {
     return (
         <div className="relative flex min-h-screen w-full flex-col">
-            <div className="layout-container flex h-full grow flex-col">
-                {/* Main Content */}
-                <div className="w-full flex flex-1 justify-center">
-                    <div className="layout-content-container flex flex-col max-w-[1200px] flex-1">
-                        {/* Hero Section */}
-                        <div className="px-4 md:px-10 py-12 md:py-20">
-                            <div className="relative overflow-hidden rounded-2xl bg-surface-dark border border-border-dark">
-                                {/* Background glow effect */}
-                                <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
-                                <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
-                                <div className="flex min-h-[560px] flex-col gap-8 items-center justify-center p-8 md:p-12 relative z-10 text-center">
-                                    <h1 className="text-white text-5xl md:text-7xl font-black leading-tight tracking-tighter max-w-4xl">
+            <MetaballBackground />
+            <PageTransition>
+                <div className="layout-container flex h-full grow flex-col">
+                    <div className="w-full flex flex-1 justify-center">
+                        <div className="layout-content-container flex flex-col max-w-[1200px] flex-1">
+                            {/* Hero Section */}
+                            <div className="px-4 md:px-10 py-20 md:py-32">
+                                <div className="flex min-h-[70vh] flex-col gap-8 items-center justify-center text-center relative z-10">
+                                    <h1 className="text-white text-6xl md:text-8xl font-black leading-[0.9] tracking-tighter max-w-5xl" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                                         Your Privacy is <br />
-                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-400">
+                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-emerald-400 to-primary animate-gradient">
                                             Your Credit
                                         </span>
                                     </h1>
-                                    <p className="text-text-secondary text-lg md:text-xl font-normal leading-relaxed max-w-2xl">
-                                        Unlock undercollateralized DeFi loans using encrypted bank data and World ID
-                                        verification. No credit score needed, just your financial reputation.
+                                    <p className="text-text-secondary text-xl md:text-2xl font-light leading-relaxed max-w-3xl backdrop-blur-sm bg-black/20 p-6 rounded-2xl border border-primary/10">
+                                        Unlock undercollateralized DeFi loans using <span className="text-primary font-semibold">encrypted bank data</span> and <span className="text-primary font-semibold">World ID verification</span>. No traditional credit score needed.
                                     </p>
-                                    <div className="flex flex-col sm:flex-row gap-4 mt-4 w-full justify-center">
-                                        <Link
-                                            href="/dashboard"
-                                            className="glow-effect flex w-full sm:w-auto min-w-[160px] cursor-pointer items-center justify-center rounded-lg h-12 px-8 bg-primary text-background-dark text-base font-bold leading-normal hover:bg-white hover:scale-105 transition-all duration-300"
-                                        >
-                                            Launch Crest App
-                                        </Link>
-                                        <button className="flex w-full sm:w-auto min-w-[160px] cursor-pointer items-center justify-center rounded-lg h-12 px-8 border border-border-dark bg-transparent text-white text-base font-bold leading-normal hover:bg-white/5 transition-colors">
+                                    <div className="flex flex-col sm:flex-row gap-6 mt-8">
+                                        <AnimatedButton href="/dashboard" variant="primary" className="min-w-[200px] text-lg h-14">
+                                            Launch PrivaCRE App
+                                        </AnimatedButton>
+                                        <AnimatedButton variant="secondary" className="min-w-[200px] text-lg h-14">
                                             Read Documentation
-                                        </button>
+                                        </AnimatedButton>
+                                    </div>
+                                    
+                                    <div className="grid grid-cols-3 gap-8 mt-16 w-full max-w-3xl">
+                                        <div className="backdrop-blur-md bg-black/30 p-6 rounded-xl border border-primary/20">
+                                            <div className="text-4xl font-bold text-primary">
+                                                <CounterAnimation end={100} suffix="%" />
+                                            </div>
+                                            <div className="text-sm text-text-secondary mt-2">Privacy Preserved</div>
+                                        </div>
+                                        <div className="backdrop-blur-md bg-black/30 p-6 rounded-xl border border-primary/20">
+                                            <div className="text-4xl font-bold text-primary">
+                                                <CounterAnimation end={50} suffix="%" />
+                                            </div>
+                                            <div className="text-sm text-text-secondary mt-2">Lower Collateral</div>
+                                        </div>
+                                        <div className="backdrop-blur-md bg-black/30 p-6 rounded-xl border border-primary/20">
+                                            <div className="text-4xl font-bold text-primary">
+                                                <CounterAnimation end={0} suffix="s" />
+                                            </div>
+                                            <div className="text-sm text-text-secondary mt-2">Instant Approval</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* How it Works Section */}
-                        <div id="how-it-works" className="flex flex-col gap-10 px-4 md:px-10 py-16">
-                            <div className="flex flex-col gap-4 text-center items-center">
-                                <h2 className="text-white text-3xl md:text-4xl font-bold leading-tight tracking-tight">
-                                    How PrivaCRE Works
-                                </h2>
-                                <p className="text-text-secondary text-lg font-normal max-w-2xl">
-                                    Secure, private, and efficient lending powered by zero-knowledge proofs.
-                                </p>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                {/* Step 1 */}
-                                <div className="group flex flex-col gap-6 rounded-2xl border border-border-dark bg-surface-dark p-8 hover:border-primary/50 transition-colors duration-300">
-                                    <div className="w-14 h-14 rounded-xl bg-background-dark border border-border-dark flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-background-dark transition-colors duration-300">
-                                        <span className="material-symbols-outlined !text-3xl">lock</span>
-                                    </div>
-                                    <div className="flex flex-col gap-3">
-                                        <h3 className="text-white text-xl font-bold">Connect Private Data</h3>
-                                        <p className="text-text-secondary text-base leading-relaxed">
-                                            Securely link your bank account. Your raw data is encrypted locally and
-                                            never leaves your device or revealed to the protocol.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Step 2 */}
-                                <div className="group flex flex-col gap-6 rounded-2xl border border-border-dark bg-surface-dark p-8 hover:border-primary/50 transition-colors duration-300">
-                                    <div className="w-14 h-14 rounded-xl bg-background-dark border border-border-dark flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-background-dark transition-colors duration-300">
-                                        <span className="material-symbols-outlined !text-3xl">smart_toy</span>
-                                    </div>
-                                    <div className="flex flex-col gap-3">
-                                        <h3 className="text-white text-xl font-bold">AI Risk Analysis</h3>
-                                        <p className="text-text-secondary text-base leading-relaxed">
-                                            Our decentralized AI analyzes transaction history to generate a ZK-proof
-                                            credit score without exposing sensitive details.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Step 3 */}
-                                <div className="group flex flex-col gap-6 rounded-2xl border border-border-dark bg-surface-dark p-8 hover:border-primary/50 transition-colors duration-300">
-                                    <div className="w-14 h-14 rounded-xl bg-background-dark border border-border-dark flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-background-dark transition-colors duration-300">
-                                        <span className="material-symbols-outlined !text-3xl">currency_bitcoin</span>
-                                    </div>
-                                    <div className="flex flex-col gap-3">
-                                        <h3 className="text-white text-xl font-bold">Unlock DeFi Loans</h3>
-                                        <p className="text-text-secondary text-base leading-relaxed">
-                                            Access undercollateralized stablecoin loans instantly based on your proven
-                                            financial reputation and on-chain history.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Trust Banner / Partners */}
-                        <div id="security" className="px-4 md:px-10 py-16 bg-background-dark">
-                            <div className="flex flex-col gap-10">
-                                <div className="flex flex-col gap-4">
-                                    <h2 className="text-white text-3xl md:text-4xl font-bold leading-tight tracking-tight">
-                                        Trusted By Industry Leaders
+                            {/* How it Works */}
+                            <div id="how-it-works" className="animate-section flex flex-col gap-10 px-4 md:px-10 py-16 backdrop-blur-sm bg-black/40 rounded-3xl mx-4">
+                                <div className="flex flex-col gap-4 text-center items-center">
+                                    <h2 className="text-white text-4xl md:text-5xl font-bold">
+                                        How PrivaCRE Works
                                     </h2>
-                                    <p className="text-text-secondary text-lg font-normal">
-                                        Built with the most secure infrastructure in Web3.
+                                    <p className="text-text-secondary text-xl font-light max-w-3xl">
+                                        A revolutionary three-phase system combining <span className="text-primary">Chainlink CRE</span>, <span className="text-primary">World ID</span>, and <span className="text-primary">Zero-Knowledge Proofs</span>.
                                     </p>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    {/* Card 1 */}
-                                    <div className="flex flex-col gap-4 p-4 rounded-xl hover:bg-surface-dark transition-colors">
-                                        <div className="w-full h-48 bg-surface-dark border border-border-dark rounded-lg flex items-center justify-center overflow-hidden relative">
-                                            <div
-                                                className="absolute inset-0 bg-cover bg-center opacity-60 hover:opacity-100 transition-opacity"
-                                                style={{
-                                                    backgroundImage:
-                                                        "url('https://www.creativefabrica.com/wp-content/uploads/2021/06/15/Cryptocurrency-Chainlink-Logo-Graphics-13436600-1.jpg')",
-                                                }}
-                                            ></div>
-                                            <div className="absolute bottom-3 left-3 bg-black/70 px-2 py-1 rounded text-xs font-mono text-primary border border-primary/30">
-                                                Infrastructure
-                                            </div>
+                                    <AnimatedCard delay={0.1} className="animate-card">
+                                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/30 flex items-center justify-center text-primary">
+                                            <span className="material-symbols-outlined !text-4xl">encrypted</span>
                                         </div>
-                                        <div>
-                                            <h4 className="text-white text-lg font-bold flex items-center gap-2">
-                                                Chainlink
-                                                <span className="material-symbols-outlined text-primary text-sm">
-                                                    verified
-                                                </span>
-                                            </h4>
-                                            <p className="text-text-secondary text-sm mt-1">
-                                                Providing decentralized oracle networks for reliable off-chain data
-                                                feeds.
+                                        <div className="flex flex-col gap-3 mt-6">
+                                            <h3 className="text-white text-2xl font-bold">Phase 1: Data Bridge</h3>
+                                            <p className="text-text-secondary leading-relaxed">
+                                                Connect via <span className="text-primary">Plaid</span>. Data encrypted client-side with <span className="text-primary">AES-256</span> and processed in Chainlink DON.
                                             </p>
                                         </div>
-                                    </div>
+                                    </AnimatedCard>
 
-                                    {/* Card 2 */}
-                                    <div className="flex flex-col gap-4 p-4 rounded-xl hover:bg-surface-dark transition-colors">
-                                        <div className="w-full h-48 bg-surface-dark border border-border-dark rounded-lg flex items-center justify-center overflow-hidden relative">
-                                            <div
-                                                className="absolute inset-0 bg-cover bg-center opacity-60 hover:opacity-100 transition-opacity"
-                                                style={{
-                                                    backgroundImage:
-                                                        "url('https://logowik.com/content/uploads/images/worldcoin2094.logowik.com.webp')",
-                                                }}
-                                            ></div>
-                                            <div className="absolute bottom-3 left-3 bg-black/70 px-2 py-1 rounded text-xs font-mono text-primary border border-primary/30">
-                                                Identity
-                                            </div>
+                                    <AnimatedCard delay={0.2} className="animate-card">
+                                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/30 flex items-center justify-center text-primary">
+                                            <span className="material-symbols-outlined !text-4xl">psychology</span>
                                         </div>
-                                        <div>
-                                            <h4 className="text-white text-lg font-bold flex items-center gap-2">
-                                                World ID
-                                                <span className="material-symbols-outlined text-primary text-sm">
-                                                    verified
-                                                </span>
-                                            </h4>
-                                            <p className="text-text-secondary text-sm mt-1">
-                                                Ensuring unique human verification without revealing identity.
+                                        <div className="flex flex-col gap-3 mt-6">
+                                            <h3 className="text-white text-2xl font-bold">Phase 2: AI Analysis</h3>
+                                            <p className="text-text-secondary leading-relaxed">
+                                                <span className="text-primary">Groq Llama 3.3</span> analyzes patterns to generate your <span className="text-primary">Crest Score (0-100)</span>.
                                             </p>
                                         </div>
-                                    </div>
+                                    </AnimatedCard>
 
-                                    {/* Card 3 */}
-                                    <div className="flex flex-col gap-4 p-4 rounded-xl hover:bg-surface-dark transition-colors">
-                                        <div className="w-full h-48 bg-surface-dark border border-border-dark rounded-lg flex items-center justify-center overflow-hidden relative">
-                                            <div
-                                                className="absolute inset-0 bg-cover bg-center opacity-60 hover:opacity-100 transition-opacity"
-                                                style={{
-                                                    backgroundImage:
-                                                        "url('https://storage.googleapis.com/job-listing-logos/898e7932-499b-4059-96ac-af7564448c85.png')",
-                                                }}
-                                            ></div>
-                                            <div className="absolute bottom-3 left-3 bg-black/70 px-2 py-1 rounded text-xs font-mono text-primary border border-primary/30">
-                                                Security
-                                            </div>
+                                    <AnimatedCard delay={0.3} className="animate-card">
+                                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/30 flex items-center justify-center text-primary">
+                                            <span className="material-symbols-outlined !text-4xl">account_balance</span>
                                         </div>
-                                        <div>
-                                            <h4 className="text-white text-lg font-bold flex items-center gap-2">
-                                                Tenderly
-                                                <span className="material-symbols-outlined text-primary text-sm">
-                                                    verified
-                                                </span>
-                                            </h4>
-                                            <p className="text-text-secondary text-sm mt-1">
-                                                Real-time monitoring and simulation for secure smart contracts.
+                                        <div className="flex flex-col gap-3 mt-6">
+                                            <h3 className="text-white text-2xl font-bold">Phase 3: Private Vault</h3>
+                                            <p className="text-text-secondary leading-relaxed">
+                                                Borrow with <span className="text-primary">50% collateral</span>. Verified by <span className="text-primary">World ID</span>.
                                             </p>
+                                        </div>
+                                    </AnimatedCard>
+                                </div>
+                            </div>
+
+                            {/* Trust Banner */}
+                            <div id="security" className="px-4 md:px-10 py-16">
+                                <div className="backdrop-blur-md bg-black/40 rounded-3xl p-10 border border-primary/20">
+                                    <h2 className="text-white text-4xl font-bold text-center mb-12">
+                                        Trusted Infrastructure
+                                    </h2>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div className="flex flex-col gap-4 p-6 rounded-xl hover:bg-black/30 transition-colors">
+                                            <div className="w-full h-32 bg-surface-dark border border-border-dark rounded-lg flex items-center justify-center">
+                                                <span className="text-primary text-4xl font-bold">Chainlink</span>
+                                            </div>
+                                            <h4 className="text-white text-lg font-bold">Decentralized Oracle Network</h4>
+                                            <p className="text-text-secondary text-sm">Secure off-chain computation with consensus verification.</p>
+                                        </div>
+
+                                        <div className="flex flex-col gap-4 p-6 rounded-xl hover:bg-black/30 transition-colors">
+                                            <div className="w-full h-32 bg-surface-dark border border-border-dark rounded-lg flex items-center justify-center">
+                                                <span className="text-primary text-4xl font-bold">World ID</span>
+                                            </div>
+                                            <h4 className="text-white text-lg font-bold">Sybil Resistance</h4>
+                                            <p className="text-text-secondary text-sm">One loan per human, verified anonymously.</p>
+                                        </div>
+
+                                        <div className="flex flex-col gap-4 p-6 rounded-xl hover:bg-black/30 transition-colors">
+                                            <div className="w-full h-32 bg-surface-dark border border-border-dark rounded-lg flex items-center justify-center">
+                                                <span className="text-primary text-4xl font-bold">Tenderly</span>
+                                            </div>
+                                            <h4 className="text-white text-lg font-bold">Smart Contract Security</h4>
+                                            <p className="text-text-secondary text-sm">Real-time monitoring and simulation.</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* CTA Section */}
-                        <div className="px-4 md:px-10 py-20">
-                            <div className="rounded-3xl bg-gradient-to-br from-surface-dark to-background-dark border border-border-dark p-10 md:p-16 text-center relative overflow-hidden">
-                                {/* Decorative elements */}
-                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
-                                <h2 className="text-white text-3xl md:text-5xl font-black leading-tight tracking-tight mb-6 relative z-10">
-                                    Ready to leverage your reputation?
-                                </h2>
-                                <p className="text-text-secondary text-lg md:text-xl max-w-2xl mx-auto mb-10 relative z-10">
-                                    Join the future of private decentralized finance. Start building your on-chain
-                                    credit score today.
-                                </p>
-                                <div className="flex flex-col sm:flex-row justify-center items-center gap-4 relative z-10">
-                                    <Link
-                                        href="/dashboard"
-                                        className="glow-effect flex min-w-[200px] cursor-pointer items-center justify-center rounded-lg h-14 px-8 bg-primary text-background-dark text-lg font-bold hover:bg-white transition-colors"
-                                    >
-                                        Launch PrivaCRE App
-                                    </Link>
-                                    <button className="flex min-w-[200px] cursor-pointer items-center justify-center rounded-lg h-14 px-8 border border-border-dark bg-surface-dark text-white text-lg font-bold hover:bg-white/5 transition-colors">
-                                        Join Discord
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Footer */}
-                        <footer className="border-t border-border-dark bg-background-dark px-4 md:px-10 py-12">
-                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-                                <div className="flex flex-col gap-2">
-                                    <div className="flex items-center gap-2 text-white">
-                                        <div className="size-6 text-primary">
-                                            <span className="material-symbols-outlined">security</span>
-                                        </div>
-                                        <span className="text-lg font-bold">PrivaCRE</span>
-                                    </div>
-                                    <p className="text-text-secondary text-sm">
-                                        © 2024 PrivaCRE Protocol. All rights reserved.
+                            {/* CTA */}
+                            <div className="px-4 md:px-10 py-20">
+                                <div className="backdrop-blur-md bg-black/40 rounded-3xl p-16 text-center border border-primary/20">
+                                    <h2 className="text-white text-5xl font-black mb-6">
+                                        Ready to leverage your reputation?
+                                    </h2>
+                                    <p className="text-text-secondary text-xl max-w-2xl mx-auto mb-10">
+                                        Join the future of private decentralized finance.
                                     </p>
-                                </div>
-                                <div className="flex flex-wrap gap-8">
-                                    <a
-                                        className="text-text-secondary hover:text-white transition-colors text-sm"
-                                        href="#"
-                                    >
-                                        Terms of Service
-                                    </a>
-                                    <a
-                                        className="text-text-secondary hover:text-white transition-colors text-sm"
-                                        href="#"
-                                    >
-                                        Privacy Policy
-                                    </a>
-                                    <a
-                                        className="text-text-secondary hover:text-white transition-colors text-sm"
-                                        href="#"
-                                    >
-                                        Documentation
-                                    </a>
-                                    <a
-                                        className="text-text-secondary hover:text-white transition-colors text-sm"
-                                        href="#"
-                                    >
-                                        Twitter
-                                    </a>
-                                    <a
-                                        className="text-text-secondary hover:text-white transition-colors text-sm"
-                                        href="#"
-                                    >
-                                        GitHub
-                                    </a>
+                                    <div className="flex flex-col sm:flex-row justify-center gap-4">
+                                        <AnimatedButton href="/dashboard" variant="primary" className="min-w-[200px] text-lg h-14">
+                                            Launch PrivaCRE App
+                                        </AnimatedButton>
+                                        <AnimatedButton variant="secondary" className="min-w-[200px] text-lg h-14">
+                                            Join Discord
+                                        </AnimatedButton>
+                                    </div>
                                 </div>
                             </div>
-                        </footer>
+
+                            {/* Footer */}
+                            <footer className="border-t border-border-dark bg-background-dark/50 backdrop-blur-sm px-4 md:px-10 py-12">
+                                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                                    <div className="flex flex-col gap-2">
+                                        <div className="flex items-center gap-2 text-white">
+                                            <span className="material-symbols-outlined text-primary">security</span>
+                                            <span className="text-lg font-bold">PrivaCRE</span>
+                                        </div>
+                                        <p className="text-text-secondary text-sm">
+                                            © 2024 PrivaCRE Protocol. All rights reserved.
+                                        </p>
+                                    </div>
+                                    <div className="flex flex-wrap gap-8">
+                                        <Link href="#" className="text-text-secondary hover:text-white transition-colors text-sm">
+                                            Terms of Service
+                                        </Link>
+                                        <Link href="#" className="text-text-secondary hover:text-white transition-colors text-sm">
+                                            Privacy Policy
+                                        </Link>
+                                        <Link href="#" className="text-text-secondary hover:text-white transition-colors text-sm">
+                                            Documentation
+                                        </Link>
+                                        <Link href="#" className="text-text-secondary hover:text-white transition-colors text-sm">
+                                            GitHub
+                                        </Link>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </PageTransition>
         </div>
     );
 }

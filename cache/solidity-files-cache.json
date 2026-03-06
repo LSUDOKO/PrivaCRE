@@ -607,6 +607,46 @@
         "AggregatorV3Interface",
         "PrivaVault"
       ]
+    },
+    "/home/arpit/Desktop/hackathon_projects/PrivaCRE/contracts/PrivateVault.sol": {
+      "lastModificationDate": 1772828947914,
+      "contentHash": "40d4a8e0f180bf5772f701af5a58084b",
+      "sourceName": "contracts/PrivateVault.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/AccessControl.sol",
+        "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "PrivateVault"
+      ]
     }
   }
 }
