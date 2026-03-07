@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { IDKitWidget, VerificationLevel, ISuccessResult } from '@worldcoin/idkit';
+import { useState, useEffect } from 'react';
+import { IDKitWidget, VerificationLevel, type ISuccessResult } from '@worldcoin/idkit';
 
 interface WorldIDVerificationProps {
   action: string;
@@ -27,24 +27,11 @@ export default function WorldIDVerification({
   className = '',
 }: WorldIDVerificationProps) {
   const [error, setError] = useState<string | null>(null);
-  
-  const appId = process.env.NEXT_PUBLIC_WORLD_ID_APP_ID;
+  const [mounted, setMounted] = useState(false);
 
-  // Check if app_id is configured
-  if (!appId) {
-    return (
-      <div className="flex flex-col gap-2">
-        <button
-          disabled
-          className={`flex items-center gap-2 px-5 py-2.5 bg-gray-900/20 border border-gray-500/30 text-gray-400 rounded-lg cursor-not-allowed ${className}`}
-        >
-          <span className="material-symbols-outlined text-sm">error</span>
-          <span className="text-sm font-bold">World ID Not Configured</span>
-        </button>
-        <p className="text-xs text-gray-400">NEXT_PUBLIC_WORLD_ID_APP_ID is not set</p>
-      </div>
-    );
-  }
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleVerify = async (proof: ISuccessResult) => {
     try {
@@ -74,6 +61,36 @@ export default function WorldIDVerification({
       throw err;
     }
   };
+
+  // Don't render until mounted (client-side only)
+  if (!mounted) {
+    return (
+      <button
+        disabled
+        className={`flex items-center gap-2 px-5 py-2.5 bg-gray-900/20 border border-gray-500/30 text-gray-400 rounded-lg cursor-not-allowed ${className}`}
+      >
+        <span className="text-sm font-bold">Loading...</span>
+      </button>
+    );
+  }
+
+  const appId = process.env.NEXT_PUBLIC_WORLD_ID_APP_ID || 'app_7141eab28d3662245856d528b69d89e4';
+
+  // Validate app_id format
+  if (!appId.startsWith('app_')) {
+    return (
+      <div className="flex flex-col gap-2">
+        <button
+          disabled
+          className={`flex items-center gap-2 px-5 py-2.5 bg-gray-900/20 border border-gray-500/30 text-gray-400 rounded-lg cursor-not-allowed ${className}`}
+        >
+          <span className="material-symbols-outlined text-sm">error</span>
+          <span className="text-sm font-bold">World ID Not Configured</span>
+        </button>
+        <p className="text-xs text-gray-400">Invalid World ID app_id format</p>
+      </div>
+    );
+  }
 
   if (error) {
     return (
