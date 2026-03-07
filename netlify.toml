@@ -3,12 +3,13 @@
 # Chainlink Convergence Hackathon 2025
 
 [build]
-  command = "npm run build"
+  command = "npm install --legacy-peer-deps && npm run build"
   publish = ".next"
 
 [build.environment]
   NODE_VERSION = "18.17.0"
   NEXT_TELEMETRY_DISABLED = "1"
+  NPM_FLAGS = "--legacy-peer-deps"
 
 # Next.js Runtime Plugin
 [[plugins]]

@@ -46,7 +46,7 @@
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.183.2",
     "viem": "^2.47.0",
-    "wagmi": "^3.5.0",
+    "wagmi": "^2.19.5",
     "yaml": "^2.8.2"
   },
   "devDependencies": {
@@ -62,6 +62,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.183.1",
     "autoprefixer": "^10.0.1",
     "chai": "^4.5.0",
     "dotenv": "^16.3.1",

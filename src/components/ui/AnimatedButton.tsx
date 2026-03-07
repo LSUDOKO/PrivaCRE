@@ -27,7 +27,7 @@ export default function AnimatedButton({
     const glow = glowRef.current;
     if (!button || !glow) return;
 
-    const handleMouseEnter = (e: MouseEvent) => {
+    const handleMouseEnter = () => {
       gsap.to(button, {
         scale: 1.05,
         duration: 0.3,
@@ -53,10 +53,11 @@ export default function AnimatedButton({
       });
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e: Event) => {
+      const mouseEvent = e as globalThis.MouseEvent;
       const rect = button.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const x = mouseEvent.clientX - rect.left;
+      const y = mouseEvent.clientY - rect.top;
       
       gsap.to(glow, {
         x: x - glow.offsetWidth / 2,
