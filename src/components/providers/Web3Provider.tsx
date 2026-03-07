@@ -21,7 +21,7 @@ import { defineChain } from "viem";
 
 // RPC URL from env (update in .env when Tenderly vnet expires)
 const TENDERLY_RPC = process.env.NEXT_PUBLIC_TENDERLY_RPC
-    || "https://virtual.sepolia.eu.rpc.tenderly.co/4bbf41fd-7d67-46d3-93cc-883cf0440985";
+    || "https://virtual.sepolia.eu.rpc.tenderly.co/7611135a-8515-41d7-8146-9390be57f949";
 
 const tenderlySepolia = defineChain({
     id: 99911155111,

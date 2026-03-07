@@ -18,14 +18,20 @@ export default function AnimatedCard({ children, className = '', delay = 0 }: An
     const glow = glowRef.current;
     if (!card || !glow) return;
 
-    // Initial animation
-    gsap.from(card, {
-      y: 50,
-      opacity: 0,
-      duration: 0.8,
-      delay,
-      ease: 'power3.out',
-    });
+    // Initial animation - ensure it ends at opacity 1
+    gsap.fromTo(card, 
+      {
+        y: 50,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        delay,
+        ease: 'power3.out',
+      }
+    );
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = card.getBoundingClientRect();
@@ -95,12 +101,13 @@ export default function AnimatedCard({ children, className = '', delay = 0 }: An
   return (
     <div
       ref={cardRef}
-      className={`relative rounded-2xl border border-border-dark bg-surface-dark p-8 transition-all duration-300 ${className}`}
+      className={`relative rounded-2xl border border-primary/30 bg-black/40 backdrop-blur-sm p-8 transition-all duration-300 ${className}`}
       style={{ transformStyle: 'preserve-3d' }}
     >
       <div
         ref={glowRef}
-        className="absolute w-64 h-64 bg-primary/30 rounded-full blur-3xl opacity-0 pointer-events-none -z-10"
+        className="absolute w-64 h-64 bg-primary/30 rounded-full blur-3xl opacity-0 pointer-events-none"
+        style={{ zIndex: -1 }}
       />
       {children}
     </div>

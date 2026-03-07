@@ -168,7 +168,7 @@ export default function DashboardPage() {
             setAnalysisStage("Reading verified score from PrivaVault [On-Chain]...");
 
             // connect directly to the Sepolia testnet where the contract lives
-            const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_TENDERLY_RPC || "https://virtual.sepolia.eu.rpc.tenderly.co/4bbf41fd-7d67-46d3-93cc-883cf0440985");
+            const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_TENDERLY_RPC || "https://virtual.sepolia.eu.rpc.tenderly.co/7611135a-8515-41d7-8146-9390be57f949");
 
             const vault = new ethers.Contract(
                 contractAddresses.vault,
@@ -298,7 +298,7 @@ export default function DashboardPage() {
                             </IDKitWidget>
                         ) : (
                             <a
-                                href="https://dashboard.tenderly.co/explorer/vnet/4bbf41fd-7d67-46d3-93cc-883cf0440985"
+                                href="https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="group flex items-center gap-2 px-5 py-2.5 bg-card-dark border border-primary/30 text-primary rounded-lg hover:bg-primary/10 transition-all shadow-[0_0_15px_rgba(13,242,108,0.1)] hover:shadow-[0_0_20px_rgba(13,242,108,0.2)]"
@@ -331,7 +331,7 @@ export default function DashboardPage() {
                                 </p>
                             </div>
                             <a
-                                href={`https://dashboard.tenderly.co/explorer/vnet/4bbf41fd-7d67-46d3-93cc-883cf0440985/tx/${txHash}`}
+                                href={`https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949/tx/${txHash}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-xs text-primary hover:underline flex items-center gap-1"

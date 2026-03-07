@@ -7,7 +7,7 @@ import PageTransition from '@/components/animations/PageTransition';
 
 export default function HomePage() {
     return (
-        <div className="relative flex min-h-screen w-full flex-col">
+        <div className="relative flex min-h-screen w-full flex-col pt-24">
             <MetaballBackground />
             <PageTransition>
                 <div className="layout-container flex h-full grow flex-col">
