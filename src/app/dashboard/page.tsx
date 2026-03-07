@@ -11,7 +11,7 @@ import PrivaVaultABI from "../../../artifacts/contracts/PrivaVault.sol/PrivaVaul
 
 export default function DashboardPage() {
     const router = useRouter();
-    const { address, isConnected } = useAccount();
+    const { address } = useAccount();
     const { connect } = useConnect();
 
     const [isVerified, setIsVerified] = useState(false);
@@ -28,10 +28,16 @@ export default function DashboardPage() {
 
     // Initial Load saved state on mount
     useEffect(() => {
-        const savedVerification = localStorage.getItem('privacre_verified') || localStorage.getItem('isVerified');
         const savedScore = localStorage.getItem('privacre_score') || localStorage.getItem('creditScore');
         const savedTxHash = localStorage.getItem('privacre_tx') || localStorage.getItem('txHash');
         const savedContract = localStorage.getItem('lastContract');
+        const worldIdVerified = localStorage.getItem('worldid_verified');
+        const privacreVerified = localStorage.getItem('privacre_verified');
+
+        // Check World ID verification - only set to true if explicitly verified
+        const isActuallyVerified = worldIdVerified === 'true' || privacreVerified === 'true';
+        console.log('Dashboard verification check:', { worldIdVerified, privacreVerified, isActuallyVerified, address });
+        setIsVerified(isActuallyVerified);
 
         // Only load score if wallet is connected
         if (address) {
@@ -52,8 +58,6 @@ export default function DashboardPage() {
             setCreditScore(null);
             setTxHash("");
         }
-
-        if (savedVerification === 'true') setIsVerified(true);
 
         // Enhanced GSAP animations on mount
         if (cardsRef.current) {
@@ -140,14 +144,6 @@ export default function DashboardPage() {
             connect({ connector: injected() });
         } catch (error) {
             console.error("Error connecting wallet:", error);
-        }
-    };
-
-    const handleWorldIDVerification = async (proof: ISuccessResult) => {
-        console.log("World ID Proof:", proof);
-        setIsVerified(true);
-        if (proof.nullifier_hash) {
-            localStorage.setItem("world_id_nullifier", proof.nullifier_hash);
         }
     };
 
@@ -319,9 +315,13 @@ export default function DashboardPage() {
                                         : "Verify your identity to continue"}
                                 </p>
                             </div>
+                            {/* Debug info - remove in production */}
+                            <div className="text-xs text-slate-500 font-mono">
+                                Debug: Wallet={walletAddress ? 'Connected' : 'Not Connected'} | Verified={isVerified ? 'Yes' : 'No'}
+                            </div>
                         </div>
                         {!isVerified ? (
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 flex-wrap">
                                 {!walletAddress && (
                                     <button
                                         onClick={connectWallet}
@@ -331,7 +331,7 @@ export default function DashboardPage() {
                                         <span className="material-symbols-outlined text-sm">account_balance_wallet</span>
                                     </button>
                                 )}
-                                {walletAddress && (
+                                {walletAddress && !isVerified && (
                                     <>
                                         <div className="flex items-center gap-2 px-4 py-2.5 bg-card-dark border border-border-dark rounded-lg">
                                             <span className="material-symbols-outlined text-primary text-sm">account_balance_wallet</span>
@@ -341,9 +341,10 @@ export default function DashboardPage() {
                                         </div>
                                         <button
                                             onClick={() => {
-                                                // Simulate World ID verification for demo
-                                                setIsVerified(true);
-                                                console.log('World ID verification simulated');
+                                                console.log('Redirecting to auth for World ID verification');
+                                                // Redirect to auth page for real World ID verification
+                                                localStorage.setItem('redirect_after_worldid', '/dashboard');
+                                                router.push('/auth');
                                             }}
                                             className="group flex items-center gap-2 px-5 py-2.5 bg-primary border border-primary text-background-dark rounded-lg hover:bg-primary/90 transition-all shadow-[0_0_15px_rgba(13,242,108,0.3)] hover:shadow-[0_0_20px_rgba(13,242,108,0.5)]"
                                         >

@@ -8,13 +8,12 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { ethers } from "ethers";
-import { IDKitWidget, VerificationLevel, type ISuccessResult } from "@worldcoin/idkit";
-
-const WORLD_ID_APP_ID = (process.env.NEXT_PUBLIC_WORLD_ID_APP_ID as `app_${string}`) || "app_7141eab28d3662245856d528b69d89e4";
+import WorldIDVerification from "@/components/WorldIDVerification";
 
 export default function AuthPage() {
     const [step, setStep] = useState(1);
     const [walletAddress, setWalletAddress] = useState<string>("");
+    const [error, setError] = useState<string>("");
     const cardRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -28,7 +27,10 @@ export default function AuthPage() {
 
         // Check if already connected
         const savedAddr = localStorage.getItem("privacre_wallet");
-        if (savedAddr) setWalletAddress(savedAddr);
+        if (savedAddr) {
+            setWalletAddress(savedAddr);
+            setStep(2);
+        }
 
         return () => ctx.revert();
     }, []);
@@ -52,13 +54,49 @@ export default function AuthPage() {
         }
     };
 
-    const handleWorldIDVerification = async (proof: ISuccessResult) => {
-        console.log("World ID Proof:", proof);
-        localStorage.setItem("privacre_verified", "true");
-        if (proof.nullifier_hash) {
-            localStorage.setItem("world_id_nullifier", proof.nullifier_hash);
+    const handleWorldIDSuccess = async (result: any) => {
+        try {
+            console.log("World ID verification successful:", result);
+
+            // Verify proof with backend
+            const verifyResponse = await fetch("/api/worldid/verify", {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify(result),
+            });
+
+            const verifyResult = await verifyResponse.json();
+
+            if (!verifyResult.success) {
+                throw new Error(verifyResult.error || "Verification failed");
+            }
+
+            // Store verification state
+            localStorage.setItem("privacre_verified", "true");
+            localStorage.setItem("worldid_verified", "true");
+
+            if (result.nullifier_hash) {
+                localStorage.setItem("world_id_nullifier", result.nullifier_hash);
+            }
+
+            // Redirect back to dashboard
+            const redirectUrl = localStorage.getItem('redirect_after_worldid');
+            if (redirectUrl) {
+                localStorage.removeItem('redirect_after_worldid');
+                window.location.href = redirectUrl;
+            } else {
+                window.location.href = '/dashboard';
+            }
+
+        } catch (error: any) {
+            console.error("World ID verification error:", error);
+            setError(error.message || "Verification failed. Please try again.");
         }
-        window.location.href = '/dashboard';
+    };
+
+    const handleWorldIDError = (error: any) => {
+        console.error("World ID error:", error);
+        setError("Verification failed. Please try again.");
     };
 
     const nextStep = () => {
@@ -146,25 +184,18 @@ export default function AuthPage() {
                                     <p className="text-sm text-white/40 mb-8">Prove you are a unique human without <br /> revealing personal data.</p>
                                 </div>
 
-                                <div className="space-y-4">
-                                    <IDKitWidget
-                                        app_id={WORLD_ID_APP_ID}
+                                {error && (
+                                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 text-sm text-red-400">
+                                        {error}
+                                    </div>
+                                )}
+
+                                <div className="space-y-4 flex justify-center w-full">
+                                    <WorldIDVerification
                                         action="verify-identity"
-                                        verification_level={VerificationLevel.Orb}
-                                        handleVerify={handleWorldIDVerification}
-                                        onSuccess={() => {
-                                            localStorage.setItem("privacre_verified", "true");
-                                        }}
-                                        // @ts-ignore
-                                        environment="staging"
-                                    >
-                                        {({ open }: { open: () => void }) => (
-                                            <Button size="xl" className="w-full h-14" onClick={open}>
-                                                <ShieldCheck className="w-4 h-4 mr-2" />
-                                                Verify with World ID
-                                            </Button>
-                                        )}
-                                    </IDKitWidget>
+                                        signal={walletAddress || "verify-identity"}
+                                        onSuccess={handleWorldIDSuccess}
+                                    />
                                     <Button variant="ghost" className="w-full h-14" onClick={() => window.location.href = '/dashboard'}>
                                         Skip for now
                                     </Button>

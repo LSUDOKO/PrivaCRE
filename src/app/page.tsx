@@ -26,14 +26,14 @@ export default function HomePage() {
                                         Unlock undercollateralized DeFi loans using <span className="text-primary font-semibold">encrypted bank data</span> and <span className="text-primary font-semibold">World ID verification</span>. No traditional credit score needed.
                                     </p>
                                     <div className="flex flex-col sm:flex-row gap-6 mt-8">
-                                        <AnimatedButton href="/dashboard" variant="primary" className="min-w-[200px] text-lg h-14">
+                                        <AnimatedButton href="/auth" variant="primary" className="min-w-[200px] text-lg h-14">
                                             Launch PrivaCRE App
                                         </AnimatedButton>
                                         <AnimatedButton variant="secondary" className="min-w-[200px] text-lg h-14">
                                             Read Documentation
                                         </AnimatedButton>
                                     </div>
-                                    
+
                                     <div className="grid grid-cols-3 gap-8 mt-16 w-full max-w-3xl">
                                         <div className="backdrop-blur-md bg-black/30 p-6 rounded-xl border border-primary/20">
                                             <div className="text-4xl font-bold text-primary">
@@ -150,7 +150,7 @@ export default function HomePage() {
                                         Join the future of private decentralized finance.
                                     </p>
                                     <div className="flex flex-col sm:flex-row justify-center gap-4">
-                                        <AnimatedButton href="/dashboard" variant="primary" className="min-w-[200px] text-lg h-14">
+                                        <AnimatedButton href="/auth" variant="primary" className="min-w-[200px] text-lg h-14">
                                             Launch PrivaCRE App
                                         </AnimatedButton>
                                         <AnimatedButton variant="secondary" className="min-w-[200px] text-lg h-14">

@@ -3,10 +3,9 @@
 import { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import { useRouter } from "next/navigation";
-import { IDKitWidget, VerificationLevel, type ISuccessResult } from "@worldcoin/idkit";
+import type { ISuccessResult } from "@worldcoin/idkit";
 import { usePlaidLink } from "@/hooks/usePlaidLink";
-
-const WORLD_ID_APP_ID = (process.env.NEXT_PUBLIC_WORLD_ID_APP_ID as `app_${string}`) || "app_7141eab28d3662245856d528b69d89e4";
+import WorldIDVerification from "@/components/WorldIDVerification";
 
 type ConnectionStatus = 'idle' | 'connecting' | 'authorizing' | 'connected';
 
@@ -34,7 +33,7 @@ export default function BridgePage() {
 
     const handlePlaidSuccess = async (publicToken: string, metadata: any) => {
         setConnectionStatus('authorizing');
-        
+
         try {
             const response = await fetch('/api/plaid/exchange', {
                 method: 'POST',
@@ -52,7 +51,7 @@ export default function BridgePage() {
                 localStorage.setItem("privacre_connection_status", "connected");
                 localStorage.setItem("privacre_item_id", data.item_id);
                 showToast('Connection Secured via Chainlink CRE! 🔒', 'success');
-                
+
                 // Navigate to orchestration after 1.5 seconds
                 setTimeout(() => {
                     router.push('/orchestration');
@@ -69,7 +68,7 @@ export default function BridgePage() {
 
     const handlePlaidExit = (error: any, metadata: any) => {
         setConnectionStatus('idle');
-        
+
         if (error) {
             if (error.error_code === 'USER_CANCELLED') {
                 showToast('Connection cancelled by user', 'error');
@@ -99,7 +98,7 @@ export default function BridgePage() {
     const handleConnect = () => {
         console.log('[Bridge] Connect button clicked');
         console.log('[Bridge] State:', { isConnected, isVerified, selectedBank, plaidReady, connectionStatus });
-        
+
         if (!isConnected) {
             console.log('[Bridge] Wallet not connected');
             showToast('Please connect your wallet first', 'error');
@@ -123,7 +122,7 @@ export default function BridgePage() {
 
         console.log('[Bridge] All checks passed, opening Plaid Link...');
         setConnectionStatus('connecting');
-        
+
         // Small delay to ensure state updates
         setTimeout(() => {
             openPlaid();
@@ -157,11 +156,10 @@ export default function BridgePage() {
         <div className="flex min-h-screen flex-col">
             {/* Toast Notification */}
             {toast && (
-                <div className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg border-2 animate-in slide-in-from-top-5 ${
-                    toast.type === 'success' 
-                        ? 'bg-emerald-900/90 border-primary text-white' 
-                        : 'bg-red-900/90 border-red-500 text-white'
-                }`}>
+                <div className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg border-2 animate-in slide-in-from-top-5 ${toast.type === 'success'
+                    ? 'bg-emerald-900/90 border-primary text-white'
+                    : 'bg-red-900/90 border-red-500 text-white'
+                    }`}>
                     <div className="flex items-center gap-3">
                         <span className="material-symbols-outlined">
                             {toast.type === 'success' ? 'check_circle' : 'error'}
@@ -204,25 +202,14 @@ export default function BridgePage() {
                                     <p className="text-xs text-slate-400">Verify your identity before connecting bank data</p>
                                 </div>
                             </div>
-                            <IDKitWidget
-                                app_id={WORLD_ID_APP_ID}
+                            <WorldIDVerification
                                 action="verify-bridge-access"
-                                verification_level={VerificationLevel.Orb}
-                                handleVerify={handleWorldIDVerification}
-                                onSuccess={() => setIsVerified(true)}
-                                // @ts-ignore
-                                environment="staging"
-                            >
-                                {({ open }: { open: () => void }) => (
-                                    <button
-                                        onClick={open}
-                                        className="flex items-center gap-2 px-6 py-3 bg-primary text-background-dark rounded-lg font-bold hover:shadow-[0_0_20px_rgba(13,242,108,0.3)] transition-all"
-                                    >
-                                        <span className="material-symbols-outlined text-lg">verified_user</span>
-                                        Verify with World ID
-                                    </button>
-                                )}
-                            </IDKitWidget>
+                                onSuccess={(result) => {
+                                    handleWorldIDVerification(result);
+                                    setIsVerified(true);
+                                }}
+                                className="w-full justify-center"
+                            />
                             <p className="text-[10px] text-yellow-400/60">⚠️ Sybil resistance: one human = one score. Verification boosts your Crest Score by +15%.</p>
                         </div>
                     )}
@@ -249,9 +236,8 @@ export default function BridgePage() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                             <div
                                 onClick={() => handleBankSelect("Chase")}
-                                className={`group relative flex flex-col items-start gap-4 p-5 rounded-xl bg-white/5 border-2 cursor-pointer transition-all ${
-                                    selectedBank === "Chase" ? "border-primary shadow-[0_0_20px_rgba(13,242,108,0.2)]" : "border-white/10 hover:border-white/20"
-                                } ${connectionStatus === 'connecting' && selectedBank === "Chase" ? 'animate-pulse' : ''}`}
+                                className={`group relative flex flex-col items-start gap-4 p-5 rounded-xl bg-white/5 border-2 cursor-pointer transition-all ${selectedBank === "Chase" ? "border-primary shadow-[0_0_20px_rgba(13,242,108,0.2)]" : "border-white/10 hover:border-white/20"
+                                    } ${connectionStatus === 'connecting' && selectedBank === "Chase" ? 'animate-pulse' : ''}`}
                             >
                                 {selectedBank === "Chase" && (
                                     <div className="absolute top-3 right-3 text-primary">
@@ -268,9 +254,8 @@ export default function BridgePage() {
                             </div>
                             <div
                                 onClick={() => handleBankSelect("Wells Fargo")}
-                                className={`group relative flex flex-col items-start gap-4 p-5 rounded-xl bg-white/5 border-2 cursor-pointer transition-all ${
-                                    selectedBank === "Wells Fargo" ? "border-primary shadow-[0_0_20px_rgba(13,242,108,0.2)]" : "border-white/10 hover:border-white/20"
-                                } ${connectionStatus === 'connecting' && selectedBank === "Wells Fargo" ? 'animate-pulse' : ''}`}
+                                className={`group relative flex flex-col items-start gap-4 p-5 rounded-xl bg-white/5 border-2 cursor-pointer transition-all ${selectedBank === "Wells Fargo" ? "border-primary shadow-[0_0_20px_rgba(13,242,108,0.2)]" : "border-white/10 hover:border-white/20"
+                                    } ${connectionStatus === 'connecting' && selectedBank === "Wells Fargo" ? 'animate-pulse' : ''}`}
                             >
                                 {selectedBank === "Wells Fargo" && (
                                     <div className="absolute top-3 right-3 text-primary">
@@ -287,9 +272,8 @@ export default function BridgePage() {
                             </div>
                             <div
                                 onClick={() => handleBankSelect("Mock Bank")}
-                                className={`group relative flex flex-col items-start gap-4 p-5 rounded-xl bg-white/5 border-2 cursor-pointer transition-all ${
-                                    selectedBank === "Mock Bank" ? "border-primary shadow-[0_0_20px_rgba(13,242,108,0.2)]" : "border-white/10 hover:border-white/20"
-                                } ${connectionStatus === 'connecting' && selectedBank === "Mock Bank" ? 'animate-pulse' : ''}`}
+                                className={`group relative flex flex-col items-start gap-4 p-5 rounded-xl bg-white/5 border-2 cursor-pointer transition-all ${selectedBank === "Mock Bank" ? "border-primary shadow-[0_0_20px_rgba(13,242,108,0.2)]" : "border-white/10 hover:border-white/20"
+                                    } ${connectionStatus === 'connecting' && selectedBank === "Mock Bank" ? 'animate-pulse' : ''}`}
                             >
                                 {selectedBank === "Mock Bank" && (
                                     <div className="absolute top-3 right-3 text-primary">
@@ -311,13 +295,12 @@ export default function BridgePage() {
                     <button
                         onClick={handleConnect}
                         disabled={isButtonDisabled}
-                        className={`w-full md:w-auto min-w-[320px] group relative flex items-center justify-center gap-3 text-lg font-bold py-4 px-8 rounded-xl transition-all ${
-                            !isButtonDisabled && connectionStatus !== 'connected'
-                                ? "bg-primary hover:bg-emerald-400 text-background-dark shadow-[0_0_20px_rgba(13,242,108,0.3)] hover:shadow-[0_0_30px_rgba(13,242,108,0.5)]" 
-                                : connectionStatus === 'connected'
+                        className={`w-full md:w-auto min-w-[320px] group relative flex items-center justify-center gap-3 text-lg font-bold py-4 px-8 rounded-xl transition-all ${!isButtonDisabled && connectionStatus !== 'connected'
+                            ? "bg-primary hover:bg-emerald-400 text-background-dark shadow-[0_0_20px_rgba(13,242,108,0.3)] hover:shadow-[0_0_30px_rgba(13,242,108,0.5)]"
+                            : connectionStatus === 'connected'
                                 ? "bg-primary text-background-dark shadow-[0_0_20px_rgba(13,242,108,0.3)]"
                                 : "bg-slate-700 text-slate-400 cursor-not-allowed"
-                        }`}
+                            }`}
                     >
                         {(connectionStatus === 'connecting' || connectionStatus === 'authorizing') && (
                             <div className="animate-spin h-5 w-5 border-3 border-background-dark border-t-transparent rounded-full"></div>

@@ -11,7 +11,8 @@
     "deploy:testnet": "hardhat run scripts/deploy.js --network arbitrumSepolia",
     "deploy:tenderly": "hardhat run scripts/deploy.js --network tenderly",
     "test:contracts": "hardhat test",
-    "compile": "hardhat compile"
+    "compile": "hardhat compile",
+    "postinstall": "node scripts/patch-idkit.js"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -29,7 +30,9 @@
     "@radix-ui/react-tooltip": "^1.1.8",
     "@rainbow-me/rainbowkit": "^2.2.10",
     "@tanstack/react-query": "^5.90.21",
-    "@worldcoin/idkit": "2.2.0",
+    "@worldcoin/idkit": "^1.5.0",
+    "@worldcoin/idkit-core": "^4.0.11",
+    "@worldcoin/idkit-server": "^1.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "ethers": "^6.16.0",
@@ -38,6 +41,7 @@
     "lucide-react": "^0.475.0",
     "next": "15.5.12",
     "plaid": "^41.4.0",
+    "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-plaid-link": "^4.1.1",

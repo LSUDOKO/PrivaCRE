@@ -15,7 +15,7 @@ const nextConfig = {
     },
     // Exclude template folders from build
     pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
-    transpilePackages: [],
+    transpilePackages: ["@worldcoin/idkit"],
     webpack: (config, { isServer }) => {
         // Suppress optional peer dependency warnings from wagmi connectors
         // These connector packages (@metamask/sdk, porto, @walletconnect/ethereum-provider, etc.)
@@ -32,19 +32,18 @@ const nextConfig = {
             "@base-org/account": false,
             "@coinbase/wallet-sdk": false,
         };
-        
+
         // Exclude template folders from compilation
         config.module = config.module || {};
         config.module.rules = config.module.rules || [];
         config.module.rules.push({
             test: /\.tsx?$/,
             exclude: [
-                /node_modules/,
                 /cre-templates-main/,
                 /PrivaCRE\/my-workflow/,
             ],
         });
-        
+
         return config;
     },
 };

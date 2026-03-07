@@ -1,68 +1,28 @@
-'use client';
-
 import { useState, useEffect } from 'react';
-import { IDKitWidget, VerificationLevel, type ISuccessResult } from '@worldcoin/idkit';
+import { IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
+import { useWorldID } from '@/hooks/useWorldID';
 
-interface WorldIDVerificationProps {
+export interface WorldIDVerificationProps {
   action: string;
   signal?: string;
-  onSuccess: (result: ISuccessResult) => void;
-  onError?: (error: Error) => void;
-  buttonText?: string;
+  onSuccess: (result: any) => void;
   className?: string;
 }
 
-/**
- * World ID Verification Component (Managed Mode)
- * 
- * In Managed Mode, World ID handles RP signatures automatically.
- * No need to fetch signatures from backend - just verify the proof.
- */
 export default function WorldIDVerification({
   action,
   signal,
   onSuccess,
-  onError,
-  buttonText = 'Verify with World ID',
-  className = '',
+  className = ''
 }: WorldIDVerificationProps) {
-  const [error, setError] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const { getIDKitConfig } = useWorldID();
 
+  // Avoid hydration errors
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const handleVerify = async (proof: ISuccessResult) => {
-    try {
-      // Send proof to backend for verification
-      const response = await fetch('/api/worldid/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(proof),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.details || 'Verification failed');
-      }
-
-      const result = await response.json();
-      
-      if (result.success) {
-        onSuccess(proof);
-      } else {
-        throw new Error(result.error || 'Verification failed');
-      }
-    } catch (err: any) {
-      const errorMsg = err.message || 'Verification failed';
-      setError(errorMsg);
-      onError?.(new Error(errorMsg));
-      throw err;
-    }
-  };
-
-  // Don't render until mounted (client-side only)
   if (!mounted) {
     return (
       <button
@@ -74,55 +34,44 @@ export default function WorldIDVerification({
     );
   }
 
-  const appId = process.env.NEXT_PUBLIC_WORLD_ID_APP_ID || 'app_7141eab28d3662245856d528b69d89e4';
+  const baseAppId = (process.env.NEXT_PUBLIC_WORLD_ID_APP_ID as `app_${string}`) || 'app_staging_7141eab28d3662245856d528b69d89e4';
 
-  // Validate app_id format
-  if (!appId.startsWith('app_')) {
-    return (
-      <div className="flex flex-col gap-2">
-        <button
-          disabled
-          className={`flex items-center gap-2 px-5 py-2.5 bg-gray-900/20 border border-gray-500/30 text-gray-400 rounded-lg cursor-not-allowed ${className}`}
-        >
-          <span className="material-symbols-outlined text-sm">error</span>
-          <span className="text-sm font-bold">World ID Not Configured</span>
-        </button>
-        <p className="text-xs text-gray-400">Invalid World ID app_id format</p>
-      </div>
-    );
-  }
+  // Staging (Simulator) requires 'app_staging_...', Production requires 'app_...'
+  const appId = baseAppId.startsWith('app_staging_')
+    ? baseAppId
+    : baseAppId.replace('app_', 'app_staging_') as `app_${string}`;
 
-  if (error) {
-    return (
-      <div className="flex flex-col gap-2">
-        <button
-          onClick={() => setError(null)}
-          className={`flex items-center gap-2 px-5 py-2.5 bg-red-900/20 border border-red-500/30 text-red-400 rounded-lg hover:bg-red-900/30 transition-all ${className}`}
-        >
-          <span className="material-symbols-outlined text-sm">error</span>
-          <span className="text-sm font-bold">Try Again</span>
-        </button>
-        <p className="text-xs text-red-400">{error}</p>
-      </div>
-    );
-  }
+  const handleVerify = async (proof: ISuccessResult) => {
+    try {
+      const config = await getIDKitConfig({ action, signal });
+      await config.handleVerify(proof);
+    } catch (error) {
+      console.error("Verification failed:", error);
+      throw error;
+    }
+  };
 
   return (
     <IDKitWidget
-      app_id={appId as `app_${string}`}
+      app_id={appId}
       action={action}
       signal={signal}
-      verification_level={VerificationLevel.Orb}
+      // @ts-ignore - The types for v1.5.0 are missing environment but it works at runtime
+      environment="staging"
       handleVerify={handleVerify}
       onSuccess={onSuccess}
     >
-      {({ open }) => (
+      {({ open }: { open: () => void }) => (
         <button
           onClick={open}
           className={`group flex items-center gap-2 px-5 py-2.5 bg-primary border border-primary text-background-dark rounded-lg hover:bg-primary/90 transition-all shadow-[0_0_15px_rgba(13,242,108,0.3)] hover:shadow-[0_0_20px_rgba(13,242,108,0.5)] ${className}`}
         >
-          <span className="text-sm font-bold">{buttonText}</span>
-          <span className="material-symbols-outlined text-sm">verified_user</span>
+          <div className="w-5 h-5 relative flex items-center justify-center">
+            <div className="w-full h-full rounded-full border-2 border-background-dark group-hover:bg-background-dark transition-colors relative flex items-center justify-center">
+              <div className="w-2 h-2 rounded-full bg-background-dark group-hover:bg-primary transition-colors"></div>
+            </div>
+          </div>
+          <span className="font-bold">Verify with World ID</span>
         </button>
       )}
     </IDKitWidget>
