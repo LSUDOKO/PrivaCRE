@@ -24,13 +24,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Forward the payload as-is to World ID verification API
+    // Add environment field to payload (required by World ID API)
+    const verificationPayload = {
+      ...payload,
+      environment: 'staging', // Use 'staging' for development, 'production' for mainnet
+    };
+
     const verifyUrl = `https://developer.world.org/api/v4/verify/${rpId}`;
     
     console.log('Verifying World ID proof with:', {
       url: verifyUrl,
-      action: payload.action,
-      nullifier_hash: payload.responses?.[0]?.nullifier,
+      action: verificationPayload.action,
+      environment: verificationPayload.environment,
+      nullifier_hash: verificationPayload.responses?.[0]?.nullifier,
     });
 
     const response = await fetch(verifyUrl, {
@@ -38,7 +44,7 @@ export async function POST(request: NextRequest) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(verificationPayload),
     });
 
     const result = await response.json();
