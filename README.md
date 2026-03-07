@@ -173,15 +173,28 @@ cd PrivaCRE/my-workflow && npm install && cd ../..
 
 The simulation demonstrates the full Privacy Track workflow: Plaid → AI → On-chain settlement.
 
+**Method 1: Using CRE CLI (Recommended)**
+```bash
+./scripts/run-cre-workflow.sh
+```
+
+**Method 2: Using npm**
 ```bash
 npm run simulate
 ```
 
-Or directly:
-
+**Method 3: Direct CRE CLI**
 ```bash
-node scripts/simulate-workflow.js
+cd PrivaCRE/my-workflow
+cre workflow simulate .
 ```
+
+**What it does**:
+- ✅ Uses actual Chainlink CRE CLI
+- ✅ Fetches bank data via Confidential HTTP
+- ✅ Sanitizes PII in WASM sandbox
+- ✅ Runs AI credit analysis (Groq Llama 3.3)
+- ✅ Submits encrypted score on-chain
 
 ### Deploy Smart Contracts
 

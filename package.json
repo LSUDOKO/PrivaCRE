@@ -40,12 +40,14 @@
     "plaid": "^41.4.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-plaid-link": "^4.1.1",
     "recharts": "^2.15.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.183.2",
     "viem": "^2.47.0",
-    "wagmi": "^3.5.0"
+    "wagmi": "^3.5.0",
+    "yaml": "^2.8.2"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.1.2",

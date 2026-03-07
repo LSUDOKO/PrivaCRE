@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, ReactNode } from 'react';
+import { useRef, useEffect, ReactNode, useState } from 'react';
 import { gsap } from 'gsap';
 
 interface AnimatedCardProps {
@@ -12,28 +12,38 @@ interface AnimatedCardProps {
 export default function AnimatedCard({ children, className = '', delay = 0 }: AnimatedCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
     const card = cardRef.current;
     const glow = glowRef.current;
     if (!card || !glow) return;
 
-    // Initial animation - ensure it ends at opacity 1
-    gsap.fromTo(card, 
-      {
-        y: 50,
-        opacity: 0,
-      },
-      {
+    // Reset animation state on mount
+    setHasAnimated(false);
+
+    // Initial animation - always run on mount
+    const ctx = gsap.context(() => {
+      // Set initial state
+      gsap.set(card, { y: 50, opacity: 0 });
+      
+      // Animate in
+      gsap.to(card, {
         y: 0,
         opacity: 1,
         duration: 0.8,
         delay,
         ease: 'power3.out',
-      }
-    );
+        onComplete: () => {
+          setHasAnimated(true);
+          // Ensure final state is set
+          gsap.set(card, { clearProps: 'all' });
+        }
+      });
+    });
 
     const handleMouseMove = (e: MouseEvent) => {
+      if (!hasAnimated) return;
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
@@ -60,6 +70,7 @@ export default function AnimatedCard({ children, className = '', delay = 0 }: An
     };
 
     const handleMouseEnter = () => {
+      if (!hasAnimated) return;
       gsap.to(glow, {
         opacity: 0.6,
         scale: 1,
@@ -73,6 +84,7 @@ export default function AnimatedCard({ children, className = '', delay = 0 }: An
     };
 
     const handleMouseLeave = () => {
+      if (!hasAnimated) return;
       gsap.to(glow, {
         opacity: 0,
         scale: 0.8,
@@ -92,17 +104,18 @@ export default function AnimatedCard({ children, className = '', delay = 0 }: An
     card.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
+      ctx.revert();
       card.removeEventListener('mousemove', handleMouseMove);
       card.removeEventListener('mouseenter', handleMouseEnter);
       card.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [delay]);
+  }, [delay]); // Re-run when component mounts
 
   return (
     <div
       ref={cardRef}
       className={`relative rounded-2xl border border-primary/30 bg-black/40 backdrop-blur-sm p-8 transition-all duration-300 ${className}`}
-      style={{ transformStyle: 'preserve-3d' }}
+      style={{ transformStyle: 'preserve-3d', opacity: 1 }}
     >
       <div
         ref={glowRef}

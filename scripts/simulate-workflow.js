@@ -38,9 +38,34 @@ function getMockBankData() {
  */
 async function getRealBankData() {
   const { Configuration, PlaidApi, PlaidEnvironments } = require('plaid');
+  const yaml = require('yaml');
 
-  if (!process.env.PLAID_CLIENT_ID || !process.env.PLAID_SECRET || !process.env.PLAID_ACCESS_TOKEN) {
-    console.log("⚠️ Plaid credentials missing in .env. Falling back to Mock Data.");
+  // Try to get access token from secrets.yaml (where Plaid Link stores it)
+  let accessToken = process.env.PLAID_ACCESS_TOKEN;
+  
+  if (!accessToken) {
+    try {
+      const secretsPath = path.join(__dirname, '../PrivaCRE/secrets.yaml');
+      if (fs.existsSync(secretsPath)) {
+        const secretsContent = fs.readFileSync(secretsPath, 'utf8');
+        const secrets = yaml.parse(secretsContent);
+        
+        // Find the most recent BANK_ACCESS_TOKEN
+        const tokenKeys = Object.keys(secrets).filter(k => k.startsWith('BANK_ACCESS_TOKEN_'));
+        if (tokenKeys.length > 0) {
+          // Use the last one (most recent)
+          accessToken = secrets[tokenKeys[tokenKeys.length - 1]];
+          console.log(`✅ Found Plaid access token in secrets.yaml: ${tokenKeys[tokenKeys.length - 1]}`);
+        }
+      }
+    } catch (err) {
+      console.log('⚠️ Could not read secrets.yaml:', err.message);
+    }
+  }
+
+  if (!process.env.PLAID_CLIENT_ID || !process.env.PLAID_SECRET || !accessToken) {
+    console.log("⚠️ Plaid credentials missing. Falling back to Mock Data.");
+    console.log("   To use real data: Connect a bank via /bridge page");
     return null;
   }
 
@@ -57,21 +82,25 @@ async function getRealBankData() {
   const client = new PlaidApi(configuration);
 
   try {
-    console.log("🔗 Fetching real data from Plaid...");
+    console.log("🔗 Fetching REAL data from Plaid...");
     const response = await client.transactionsSync({
-      access_token: process.env.PLAID_ACCESS_TOKEN,
+      access_token: accessToken,
     });
 
+    console.log(`✅ Retrieved ${response.data.added.length} transactions from Plaid`);
+    
     return {
       accounts: response.data.accounts,
       transactions: response.data.added.map(tx => ({
         amount: tx.amount,
         date: tx.date,
-        category: tx.category
-      }))
+        category: tx.category || []
+      })),
+      dataSource: 'Plaid API'
     };
   } catch (error) {
     console.error("❌ Plaid Sync Failed:", error.response ? error.response.data : error.message);
+    console.log("   Falling back to Mock Data");
     return null;
   }
 }
@@ -81,15 +110,18 @@ async function simulateWorkflow(address) {
 
   // Attempt real data, fallback to mock
   let bankData = await getRealBankData();
-  const isReal = !!bankData;
+  const dataSource = bankData?.dataSource || 'Mock Simulation';
+  const isReal = !!bankData && bankData.dataSource === 'Plaid API';
+  
   if (!bankData) {
     bankData = getMockBankData();
+    bankData.dataSource = 'Mock Simulation';
   }
 
   const workflowArgs = {
     userAddress: address || "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
     worldIdNullifier: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
-    accessToken: isReal ? "real_access_token_verified" : "mock_access_token",
+    accessToken: isReal ? "real_plaid_token_from_secrets" : "mock_access_token",
   };
 
   console.log("📋 Workflow Arguments:", JSON.stringify(workflowArgs, null, 2));
@@ -180,7 +212,8 @@ async function simulateWorkflow(address) {
       totalExpenses,
       netCashFlow: totalIncome - totalExpenses,
       averageBalance: currentBalance,
-      dataSource: isReal ? "Real Bank API (Plaid)" : "Mock Simulation",
+      dataSource: dataSource,
+      transactionCount: bankData.transactions.length,
     },
     aiResult: aiResponse,
     encodedData: encoded,

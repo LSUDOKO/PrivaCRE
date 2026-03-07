@@ -24,14 +24,6 @@ export default function LendingPage() {
 
     const isCorrectNetwork = chainId === 99911155111;
 
-    // Sync with localStorage on mount
-    useEffect(() => {
-        const savedScore = localStorage.getItem('creditScore');
-        if (savedScore) setLocalScore(Number(savedScore));
-        const verified = localStorage.getItem('privacre_verified') === 'true';
-        setIsWorldIdVerified(verified);
-    }, []);
-
     // Read User Score directly from contract
     const { data: userScoreRaw, refetch: refetchScore, isError: isScoreError, isLoading: isScoreLoading } = useReadContract({
         address: contractAddresses.vault as `0x${string}`,
@@ -42,6 +34,27 @@ export default function LendingPage() {
             enabled: !!address && isCorrectNetwork,
         }
     });
+
+    // Sync with localStorage on mount and when network changes
+    useEffect(() => {
+        // Try both key names for backwards compatibility
+        const savedScore = localStorage.getItem('privacre_score') || localStorage.getItem('creditScore');
+        if (savedScore) {
+            setLocalScore(Number(savedScore));
+            // Migrate to new key if using old one
+            if (localStorage.getItem('creditScore')) {
+                localStorage.setItem('privacre_score', savedScore);
+                localStorage.removeItem('creditScore');
+            }
+        }
+        const verified = localStorage.getItem('privacre_verified') === 'true';
+        setIsWorldIdVerified(verified);
+        
+        // Refetch score when network changes to correct one
+        if (isCorrectNetwork && address) {
+            refetchScore();
+        }
+    }, [isCorrectNetwork, address, refetchScore]);
 
     // Read Latest Price (Polling every 30s)
     const { data: ethPriceRaw, refetch: refetchPrice } = useReadContract({
@@ -78,6 +91,21 @@ export default function LendingPage() {
         : (localScore || 0);
 
     const isSynced = !!(userScoreRaw && Number(userScoreRaw) > 0);
+    
+    // Debug logging
+    useEffect(() => {
+        console.log('[Lending] Score Debug:', {
+            userScoreRaw,
+            userScore,
+            localScore,
+            isSynced,
+            isCorrectNetwork,
+            isScoreLoading,
+            isScoreError,
+            address
+        });
+    }, [userScoreRaw, userScore, localScore, isSynced, isCorrectNetwork, isScoreLoading, isScoreError, address]);
+    
     const ethPrice = ethPriceLocal;
 
     // Robustly handle the struct return (could be array or object depending on wagmi version/ABI)
@@ -582,7 +610,7 @@ export default function LendingPage() {
 
                                 {txHash && (
                                     <a
-                                        href={`https://dashboard.tenderly.co/LSUDOKO/project/testnet/29209eb9-c1b7-42a0-97d9-1ee5be8c8eb9/tx/${txHash}`}
+                                        href={`https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949/tx/${txHash}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-[10px] text-center text-primary hover:underline font-mono truncate px-4 flex items-center justify-center gap-1"
