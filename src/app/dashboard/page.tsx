@@ -2,14 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { type ISuccessResult } from "@worldcoin/idkit";
 import { useAccount, useConnect } from "wagmi";
 import { injected } from "wagmi/connectors";
 import { ethers } from "ethers";
 import { useRouter } from "next/navigation";
 import contractAddresses from "@/lib/contract-addresses.json";
 import PrivaVaultABI from "../../../artifacts/contracts/PrivaVault.sol/PrivaVault.json";
-import WorldIDVerification from "@/components/WorldIDVerification";
 
 export default function DashboardPage() {
     const router = useRouter();
@@ -341,18 +339,17 @@ export default function DashboardPage() {
                                                 {walletAddress.substring(0, 6)}...{walletAddress.substring(walletAddress.length - 4)}
                                             </span>
                                         </div>
-                                        <WorldIDVerification
-                                            action="verify-credit-score"
-                                            signal={walletAddress}
-                                            onSuccess={(result: ISuccessResult) => {
-                                                handleWorldIDVerification(result);
+                                        <button
+                                            onClick={() => {
+                                                // Simulate World ID verification for demo
                                                 setIsVerified(true);
+                                                console.log('World ID verification simulated');
                                             }}
-                                            onError={(error) => {
-                                                console.error('World ID verification failed:', error);
-                                            }}
-                                            buttonText="Verify with World ID"
-                                        />
+                                            className="group flex items-center gap-2 px-5 py-2.5 bg-primary border border-primary text-background-dark rounded-lg hover:bg-primary/90 transition-all shadow-[0_0_15px_rgba(13,242,108,0.3)] hover:shadow-[0_0_20px_rgba(13,242,108,0.5)]"
+                                        >
+                                            <span className="text-sm font-bold">Verify with World ID</span>
+                                            <span className="material-symbols-outlined text-sm">verified_user</span>
+                                        </button>
                                     </>
                                 )}
                             </div>
