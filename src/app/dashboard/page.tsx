@@ -2,13 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { IDKitWidget, VerificationLevel, type ISuccessResult } from "@worldcoin/idkit";
+import { type ISuccessResult } from "@worldcoin/idkit";
 import { useAccount, useConnect } from "wagmi";
 import { injected } from "wagmi/connectors";
 import { ethers } from "ethers";
 import { useRouter } from "next/navigation";
 import contractAddresses from "@/lib/contract-addresses.json";
 import PrivaVaultABI from "../../../artifacts/contracts/PrivaVault.sol/PrivaVault.json";
+import WorldIDVerification from "@/components/WorldIDVerification";
 
 export default function DashboardPage() {
     const router = useRouter();
@@ -340,24 +341,18 @@ export default function DashboardPage() {
                                                 {walletAddress.substring(0, 6)}...{walletAddress.substring(walletAddress.length - 4)}
                                             </span>
                                         </div>
-                                        <IDKitWidget
-                                            app_id={process.env.NEXT_PUBLIC_WORLD_ID_APP_ID as `app_${string}`}
+                                        <WorldIDVerification
                                             action="verify-credit-score"
                                             signal={walletAddress}
-                                            verification_level={VerificationLevel.Orb}
-                                            handleVerify={handleWorldIDVerification}
-                                            onSuccess={() => setIsVerified(true)}
-                                        >
-                                            {({ open }: { open: () => void }) => (
-                                                <button
-                                                    onClick={open}
-                                                    className="group flex items-center gap-2 px-5 py-2.5 bg-primary border border-primary text-background-dark rounded-lg hover:bg-primary/90 transition-all shadow-[0_0_15px_rgba(13,242,108,0.3)] hover:shadow-[0_0_20px_rgba(13,242,108,0.5)]"
-                                                >
-                                                    <span className="text-sm font-bold">Verify with World ID</span>
-                                                    <span className="material-symbols-outlined text-sm">verified_user</span>
-                                                </button>
-                                            )}
-                                        </IDKitWidget>
+                                            onSuccess={(result: ISuccessResult) => {
+                                                handleWorldIDVerification(result);
+                                                setIsVerified(true);
+                                            }}
+                                            onError={(error) => {
+                                                console.error('World ID verification failed:', error);
+                                            }}
+                                            buttonText="Verify with World ID"
+                                        />
                                     </>
                                 )}
                             </div>

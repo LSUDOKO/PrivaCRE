@@ -27,6 +27,24 @@ export default function WorldIDVerification({
   className = '',
 }: WorldIDVerificationProps) {
   const [error, setError] = useState<string | null>(null);
+  
+  const appId = process.env.NEXT_PUBLIC_WORLD_ID_APP_ID;
+
+  // Check if app_id is configured
+  if (!appId) {
+    return (
+      <div className="flex flex-col gap-2">
+        <button
+          disabled
+          className={`flex items-center gap-2 px-5 py-2.5 bg-gray-900/20 border border-gray-500/30 text-gray-400 rounded-lg cursor-not-allowed ${className}`}
+        >
+          <span className="material-symbols-outlined text-sm">error</span>
+          <span className="text-sm font-bold">World ID Not Configured</span>
+        </button>
+        <p className="text-xs text-gray-400">NEXT_PUBLIC_WORLD_ID_APP_ID is not set</p>
+      </div>
+    );
+  }
 
   const handleVerify = async (proof: ISuccessResult) => {
     try {
@@ -74,7 +92,7 @@ export default function WorldIDVerification({
 
   return (
     <IDKitWidget
-      app_id={process.env.NEXT_PUBLIC_WORLD_ID_APP_ID as `app_${string}`}
+      app_id={appId as `app_${string}`}
       action={action}
       signal={signal}
       verification_level={VerificationLevel.Orb}
