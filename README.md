@@ -65,6 +65,26 @@ PrivaCRE generates privacy-preserving credit scores using:
 
 **Result**: Borrow $100 with just $105 collateral (105%) if you have good credit!
 
+
+## GALLERY 
+### Landing Page 
+<img width="1891" height="1004" alt="image" src="https://github.com/user-attachments/assets/9606c7cc-bcdf-49d1-9b1a-dca589746dc7" />
+
+### DashBoard
+<img width="1886" height="1002" alt="image" src="https://github.com/user-attachments/assets/a1038389-bb63-43d1-8cbd-f51094015774" />
+
+### Available Loans 
+<img width="1880" height="999" alt="image" src="https://github.com/user-attachments/assets/40cf45a5-8610-4dc3-af0e-8433a6c2674f" />
+
+### PrivaCRE Lending Vault
+<img width="1882" height="1001" alt="image" src="https://github.com/user-attachments/assets/49fed30e-b8d9-42a8-9b84-e58f0f531188" />
+
+### CRE Orchestration Brain
+<img width="1886" height="985" alt="image" src="https://github.com/user-attachments/assets/cd5465e3-dd02-4bea-86e3-7cec9d524a33" />
+
+### Confidential Data Bridge
+<img width="1883" height="996" alt="image" src="https://github.com/user-attachments/assets/6c54f7b0-a484-4c7f-af92-f7d448c0e751" />
+
 ---
 
 ## 🏗️ Architecture
