@@ -10,7 +10,7 @@
 
 **Bringing Real-World Credit Scoring to DeFi Without Compromising Privacy**
 
-[Live Demo](https://privacre.netlify.app) • [Documentation](./docs) • [Video Demo](#) • [Hackathon Submission](./docs/HACKATHON_SUBMISSION_FORM.md)
+[Live Demo](https://69ac5879ed37727422011b22--privacre.netlify.app/) • [PPT](./docs) • [Video Demo](https://youtu.be/ucmWdWACjNE)
 
 </div>
 
@@ -19,29 +19,16 @@
 ## 🔗 Quick Links
 
 ### � Live Application
-- **Frontend**: [https://privacre.netlify.app](https://privacre.netlify.app)
-- **Status**: ✅ Live and Running
-
+- **website**: [https://privacre.netlify.app](https://69ac5879ed37727422011b22--privacre.netlify.app/)
 ### ⛓️ Smart Contracts (Tenderly Virtual TestNet)
 - **PrivaVault**: [`0x49BdEEcB489E037C0f6928dEe6a043908b8d8877`](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949/address/0x49BdEEcB489E037C0f6928dEe6a043908b8d8877)
 - **Network Explorer**: [Tenderly Dashboard](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949)
 - **RPC URL**: `https://virtual.sepolia.eu.rpc.tenderly.co/7611135a-8515-41d7-8146-9390be57f949`
 
 ### 📦 Repository
-- **GitHub**: [github.com/LSUDOKO/PrivaCRE](https://github.com/LSUDOKO/PrivaCRE)
 - **CRE Workflow**: [`/PrivaCRE/my-workflow/`](./PrivaCRE/my-workflow/)
 - **Smart Contracts**: [`/contracts/`](./contracts/)
 
-### 📚 Documentation
-- **Main Docs**: [/docs](./docs)
-- **Quick Start**: [docs/QUICKSTART.md](./docs/QUICKSTART.md)
-- **Technical Architecture**: [docs/TECHNICAL_ARCHITECTURE.md](./docs/TECHNICAL_ARCHITECTURE.md)
-- **CRE Integration**: [docs/CRE_INTEGRATION_SUMMARY.md](./docs/CRE_INTEGRATION_SUMMARY.md)
-
-### 🎯 Hackathon
-- **Submission Form**: [docs/HACKATHON_SUBMISSION_FORM.md](./docs/HACKATHON_SUBMISSION_FORM.md)
-- **Video Script**: [docs/HACKATHON_VIDEO_SCRIPT.md](./docs/HACKATHON_VIDEO_SCRIPT.md)
-- **Demo Script**: [docs/HACKATHON_DEMO_SCRIPT.md](./docs/HACKATHON_DEMO_SCRIPT.md)
 
 ---
 
@@ -127,6 +114,9 @@ PrivaCRE generates privacy-preserving credit scores using:
 ```
 
 ---
+
+<img width="1300" height="716" alt="swappy-20260307-225929" src="https://github.com/user-attachments/assets/475aac02-a186-4362-8bd4-2b0bc352f38c" />
+
 
 ## ✨ Key Features
 
