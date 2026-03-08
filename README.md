@@ -167,8 +167,8 @@ PrivaCRE generates privacy-preserving credit scores using:
 
 | Contract | Address | Explorer Link |
 |----------|---------|---------------|
-| **PrivaVault** (Main Lending Vault) | `0x49BdEEcB489E037C0f6928dEe6a043908b8d8877` | [View on Tenderly](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949/address/0x49BdEEcB489E037C0f6928dEe6a043908b8d8877) |
-| **MockUSDC** (Test Token) | `0x5432bed5E495f625640bc6210087D07C14DF5FE3` | [View on Tenderly](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949/address/0x5432bed5E495f625640bc6210087D07C14DF5FE3) |
+| **PrivaVault** (Main Lending Vault) | `0x49BdEEcB489E037C0f6928dEe6a043908b8d8877` | [View on Tenderly](https://dashboard.tenderly.co/LSUDOKO/project/testnet/cb65dc8d-0984-4be0-880c-f607ce613993/contract/virtual/0x49bdeecb489e037c0f6928dee6a043908b8d8877) |
+| **MockUSDC** (Test Token) | `0x5432bed5E495f625640bc6210087D07C14DF5FE3` | [View on Tenderly](https://dashboard.tenderly.co/LSUDOKO/project/testnet/cb65dc8d-0984-4be0-880c-f607ce613993/contract/virtual/0x5432bed5e495f625640bc6210087d07c14df5fe3) |
 | **MockPriceFeed** (Oracle) | `0xb8d323B1F3524d2e634B9Fa2537425AD39712140` | [View on Tenderly](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949/address/0xb8d323B1F3524d2e634B9Fa2537425AD39712140) |
 | **CRE Oracle** | `0xAd0799D4D6564c945C448D8BcFA890c41e111A98` | [View on Tenderly](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949/address/0xAd0799D4D6564c945C448D8BcFA890c41e111A98) |
 
