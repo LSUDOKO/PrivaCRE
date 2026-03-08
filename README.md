@@ -1,6 +1,7 @@
 # PrivaCRE: Privacy-Preserving Credit Scoring for DeFi
 
 <div align="center">
+<img width="675" height="227" alt="image" src="https://github.com/user-attachments/assets/35ee8aa9-0136-4d70-ae12-f3572f2345ca" />
 
 ![PrivaCRE Logo](https://img.shields.io/badge/PrivaCRE-Privacy--First-0df26c?style=for-the-badge)
 [![Chainlink](https://img.shields.io/badge/Powered%20by-Chainlink%20CRE-375BD2?style=for-the-badge&logo=chainlink)](https://chain.link/)
