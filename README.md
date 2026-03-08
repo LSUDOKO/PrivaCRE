@@ -18,14 +18,14 @@
 
 ## 🔗 Quick Links
 
-### � Live Application
+###  Live Application
 - **website**: [https://privacre.netlify.app](https://69ac5879ed37727422011b22--privacre.netlify.app/)
-### ⛓️ Smart Contracts (Tenderly Virtual TestNet)
+###  Smart Contracts (Tenderly Virtual TestNet)
 - **PrivaVault**: [`0x49BdEEcB489E037C0f6928dEe6a043908b8d8877`](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949/address/0x49BdEEcB489E037C0f6928dEe6a043908b8d8877)
 - **Network Explorer**: [Tenderly Dashboard](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949)
 - **RPC URL**: `https://virtual.sepolia.eu.rpc.tenderly.co/7611135a-8515-41d7-8146-9390be57f949`
 
-### 📦 Repository
+###  Repository
 - **CRE Workflow**: [`/PrivaCRE/my-workflow/`](./PrivaCRE/my-workflow/)
 - **Smart Contracts**: [`/contracts/`](./contracts/)
 
