@@ -152,6 +152,37 @@ PrivaCRE generates privacy-preserving credit scores using:
 
 ---
 
+
+## 🌐 Deployed Contracts
+
+### Tenderly Virtual TestNet (Sepolia)
+
+**Network Details:**
+- **Network**: Tenderly Virtual TestNet
+- **Chain ID**: 11155111 (Sepolia)
+- **RPC URL**: `https://virtual.sepolia.eu.rpc.tenderly.co/7611135a-8515-41d7-8146-9390be57f949`
+- **Explorer**: [Tenderly Dashboard](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949)
+
+**Deployed Contracts:**
+
+| Contract | Address | Explorer Link |
+|----------|---------|---------------|
+| **PrivaVault** (Main Lending Vault) | `0x49BdEEcB489E037C0f6928dEe6a043908b8d8877` | [View on Tenderly](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949/address/0x49BdEEcB489E037C0f6928dEe6a043908b8d8877) |
+| **MockUSDC** (Test Token) | `0x5432bed5E495f625640bc6210087D07C14DF5FE3` | [View on Tenderly](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949/address/0x5432bed5E495f625640bc6210087D07C14DF5FE3) |
+| **MockPriceFeed** (Oracle) | `0xb8d323B1F3524d2e634B9Fa2537425AD39712140` | [View on Tenderly](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949/address/0xb8d323B1F3524d2e634B9Fa2537425AD39712140) |
+| **CRE Oracle** | `0xAd0799D4D6564c945C448D8BcFA890c41e111A98` | [View on Tenderly](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949/address/0xAd0799D4D6564c945C448D8BcFA890c41e111A98) |
+
+**Deployment Date:** March 7, 2026
+
+**Add to MetaMask:**
+```javascript
+Network Name: Tenderly Virtual TestNet
+RPC URL: https://virtual.sepolia.eu.rpc.tenderly.co/7611135a-8515-41d7-8146-9390be57f949
+Chain ID: 11155111
+Currency Symbol: ETH
+Block Explorer: https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949
+```
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -373,6 +404,8 @@ const collateralRatio = creditScore >= 90 ? 105 :
 - Dynamic interest rates based on risk
 - Automated liquidation protection
 - Transparent, verifiable on-chain
+
+<img width="1280" height="695" alt="swappy-20260307-230205" src="https://github.com/user-attachments/assets/86c945ea-4d5e-42e6-a67a-1bed292c2a60" />
 
 ### Interact with Deployed Contracts
 
@@ -666,36 +699,6 @@ contract YourProtocol {
 
 ---
 
-## 🌐 Deployed Contracts
-
-### Tenderly Virtual TestNet (Sepolia)
-
-**Network Details:**
-- **Network**: Tenderly Virtual TestNet
-- **Chain ID**: 11155111 (Sepolia)
-- **RPC URL**: `https://virtual.sepolia.eu.rpc.tenderly.co/7611135a-8515-41d7-8146-9390be57f949`
-- **Explorer**: [Tenderly Dashboard](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949)
-
-**Deployed Contracts:**
-
-| Contract | Address | Explorer Link |
-|----------|---------|---------------|
-| **PrivaVault** (Main Lending Vault) | `0x49BdEEcB489E037C0f6928dEe6a043908b8d8877` | [View on Tenderly](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949/address/0x49BdEEcB489E037C0f6928dEe6a043908b8d8877) |
-| **MockUSDC** (Test Token) | `0x5432bed5E495f625640bc6210087D07C14DF5FE3` | [View on Tenderly](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949/address/0x5432bed5E495f625640bc6210087D07C14DF5FE3) |
-| **MockPriceFeed** (Oracle) | `0xb8d323B1F3524d2e634B9Fa2537425AD39712140` | [View on Tenderly](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949/address/0xb8d323B1F3524d2e634B9Fa2537425AD39712140) |
-| **CRE Oracle** | `0xAd0799D4D6564c945C448D8BcFA890c41e111A98` | [View on Tenderly](https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949/address/0xAd0799D4D6564c945C448D8BcFA890c41e111A98) |
-
-**Deployment Date:** March 7, 2026
-
-**Add to MetaMask:**
-```javascript
-Network Name: Tenderly Virtual TestNet
-RPC URL: https://virtual.sepolia.eu.rpc.tenderly.co/7611135a-8515-41d7-8146-9390be57f949
-Chain ID: 11155111
-Currency Symbol: ETH
-Block Explorer: https://dashboard.tenderly.co/explorer/vnet/7611135a-8515-41d7-8146-9390be57f949
-```
-
 ### Planned Networks
 - ⏳ Ethereum Mainnet
 - ⏳ Arbitrum One
@@ -735,88 +738,9 @@ cre workflow simulate
 
 ---
 
-## 📚 Documentation
-
-Comprehensive documentation available in `/docs`:
-
-### Getting Started
-- [Quick Start Guide](./docs/QUICKSTART.md)
-- [Installation Guide](./docs/INSTALLATION.md)
-- [Configuration Guide](./docs/CONFIGURATION.md)
-
-### Integration Guides
-- [CRE Integration](./docs/CRE_INTEGRATION_SUMMARY.md)
-- [Plaid Integration](./docs/PLAID_INTEGRATION_GUIDE.md)
-- [World ID Integration](./docs/WORLD_ID_INTEGRATION_COMPLETE.md)
-
-### Technical Documentation
-- [Technical Architecture](./docs/TECHNICAL_ARCHITECTURE.md)
-- [Smart Contracts](./docs/SMART_CONTRACTS.md)
-- [API Reference](./docs/API_REFERENCE.md)
-- [Credit Score Calculation](./docs/CREDIT_SCORE_CALCULATION_EXPLAINED.md)
-
-### Deployment
-- [Deployment Guide](./docs/DEPLOYMENT_GUIDE.md)
-- [Netlify Deployment](./docs/NETLIFY_DEPLOYMENT_GUIDE.md)
-- [Contract Deployment](./docs/CONTRACT_DEPLOYMENT.md)
-
-### Hackathon
-- [Submission Form](./docs/HACKATHON_SUBMISSION_FORM.md)
-- [Video Script](./docs/HACKATHON_VIDEO_SCRIPT.md)
-- [Demo Script](./docs/DEMO_SCRIPT.md)
-
----
-
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for details.
-
-### Development Workflow
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Code Style
-
-- TypeScript for all new code
-- ESLint + Prettier for formatting
-- Comprehensive comments
-- Test coverage for new features
-
----
-
-## 🗺️ Roadmap
-
-### Phase 1: MVP (Current)
-- ✅ Core credit scoring functionality
-- ✅ Chainlink CRE integration
-- ✅ World ID verification
-- ✅ Basic lending interface
-- ✅ Tenderly deployment
-
-### Phase 2: Enhancement (Q2 2026)
-- ⏳ Professional smart contract audit
-- ⏳ Mainnet deployment
-- ⏳ Production Plaid integration
-- ⏳ Enhanced AI models
-- ⏳ Mobile app
-
-### Phase 3: Expansion (Q3 2026)
-- ⏳ Multi-chain deployment
-- ⏳ Additional data sources
-- ⏳ DeFi protocol partnerships
-- ⏳ Credit score marketplace
-- ⏳ DAO governance
-
-### Phase 4: Scale (Q4 2026)
-- ⏳ Global expansion
-- ⏳ Institutional partnerships
-- ⏳ Insurance products
-- ⏳ Decentralized credit bureau
-- ⏳ 1M+ users
 
 ---
 
@@ -838,16 +762,6 @@ Built with support from:
 
 ---
 
-## 📞 Contact & Support
-
-- **Website**: [privacre.netlify.app](https://privacre.netlify.app)
-- **GitHub**: [github.com/LSUDOKO/PrivaCRE](https://github.com/LSUDOKO/PrivaCRE)
-- **Email**: [your-email@example.com]
-- **Twitter**: [@PrivaCRE]
-- **Discord**: [Join our community]
-
----
-
 ## 🎯 Built For
 
 **Chainlink Convergence Hackathon 2026**
@@ -857,11 +771,6 @@ Tracks:
 - 🏆 Worldcoin Privacy Track
 
 ---
-
 <div align="center">
-
 **Made with ❤️ for a more inclusive, privacy-preserving DeFi**
-
-[⬆ Back to Top](#privacre-privacy-preserving-credit-scoring-for-defi)
-
 </div>
