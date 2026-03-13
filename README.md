@@ -10,7 +10,7 @@
 
 **Bringing Real-World Credit Scoring to DeFi Without Compromising Privacy**
 
-[Live Demo](https://69ac5879ed37727422011b22--privacre.netlify.app/) • [PPT](./docs) • [Video Demo](https://youtu.be/ucmWdWACjNE)
+[Live Demo](https://69ac5879ed37727422011b22--privacre.netlify.app/) • [PPT](https://docs.google.com/presentation/d/1Xh_dV8-C9VpSg4_3RnTbkv7tA-ebc4smidqy_ZNeliY/edit?usp=sharing) • [Video Demo](https://youtu.be/ucmWdWACjNE)
 
 </div>
 
